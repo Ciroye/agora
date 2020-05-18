@@ -2,5 +2,7 @@ import { createStore } from "redux";
 import reducer from  "./reducer";
 
 export default createStore(reducer, {
-  session: null,
+  apartament: null,
+  residential: null,
+  assembly: null,
 });
