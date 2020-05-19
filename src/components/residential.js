@@ -57,19 +57,16 @@ function Residential() {
     }
 
     async function onDelete (id) {
-      const categoryDocRef = firebase
-      .collection(RESIDENTIAL_COLLECTION)
-      .doc(id);
-
+  
       const files = await firebase
       .collection('apartaments')
-      .where('residential', '==', categoryDocRef).
+      .where('residential', '==', id).
       get();
 
       if (files.docs.length === 0){
         firebase.collection(RESIDENTIAL_COLLECTION).doc(id).delete();
       }else{
-        window.alert("No se puede borrar por que existen apartamentos asociados a esta unidad");
+          window.alert("No se puede borrar por que existen apartamentos asociados a esta unidad");
       }
     }
 
