@@ -2,7 +2,7 @@ import React, {Fragment, useState, useEffect} from 'react'
 import {Table, Button, Modal, Form} from 'react-bootstrap'
 import firebase from '../firebase'
 import styled from '@emotion/styled';
-import { PencilSquare } from 'react-bootstrap-icons';
+import {RESIDENTIAL_COLLECTION} from '../constants/constants'
 
 const Div = styled.div `
   padding-top: 10px;
@@ -33,12 +33,11 @@ function Residential() {
   const [newNameResidentials, setnewNameResidentials] = useState([]);
   const [newTotalResidentials, setnewTotalResidentials] = useState([]);
 
-  const [upDateNameResidentials, setupDateNameResidentials] = useState([]);
-  const [upDateTotalResidentials, setupDateTotalResidentials] = useState([]);
+  
 
   useEffect(() => {
     const fetchData = async() => {
-      firebase.firestore().collection('residential')
+      firebase.collection(RESIDENTIAL_COLLECTION)
       .onSnapshot(function (data) {
         setResidentials(data.docs.map(doc => ({
           id: doc.id,
@@ -51,49 +50,32 @@ function Residential() {
 
     const onCreate = () => {
       setShow(false);
-      firebase.firestore().collection('residential').add({
+      firebase.collection(RESIDENTIAL_COLLECTION).add({
         name: newNameResidentials,
         total: newTotalResidentials
       });
     }
 
-    const files = firebase
-    .firestore()
-    .collection('apartaments')
-    .where('residential', '==', 'QLw3Hz7D8BOJtDlNEJ7i').
-    get();
-
-    console.log(files);
-
     async function onDelete (id) {
-      const categoryDocRef = firebase.firestore()
-      .collection('residential')
+      const categoryDocRef = firebase
+      .collection(RESIDENTIAL_COLLECTION)
       .doc(id);
 
       const files = await firebase
-      .firestore()
       .collection('apartaments')
       .where('residential', '==', categoryDocRef).
       get();
 
-      console.log(files);
-      firebase.firestore().collection('residential').doc(id).delete();
-    }
-
-    const onUpdate = (id) => {
-      firebase.firestore().collection('residential').doc(id).set({
-        name: upDateNameResidentials,
-        total: upDateTotalResidentials
-      });
+      if (files.docs.length === 0){
+        firebase.collection(RESIDENTIAL_COLLECTION).doc(id).delete();
+      }else{
+        window.alert("No se puede borrar por que existen apartamentos asociados a esta unidad");
+      }
     }
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
-    const [showEdit, setShowEdit] = useState(false);
-    const handleCloseEdit = () => setShowEdit(false);
-    const handleShowEdit = () => setShowEdit(true);
     
   return (
       <Fragment>
@@ -153,13 +135,12 @@ function Residential() {
                     </tr>
                 </thead>
                 <tbody>
-                  {residentials.map(residential =>
-                    <tr>
+                  {residentials.map((residential, i) =>
+                    <tr key={i}>
                       <td>{residential.name}</td>
                       <td>{residential.total}</td>
                       <td>
                         <Button variant="danger" onClick={() => onDelete(residential.id)}> Eliminar </Button>
-                        <span> </span>
                       </td>
                     </tr>
                   )}

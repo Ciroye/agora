@@ -54,6 +54,7 @@ class Login extends Component {
                 }
                 this.setState({ loading: false })
             }).catch((error) => {
+                console.log(error);
                 this.setState({ error: "Ha ocurrido un error inesperado." })
                 this.setState({ loading: false })
             })
