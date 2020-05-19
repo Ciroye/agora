@@ -1,6 +1,7 @@
-import React, {Component} from 'react'
+import React from 'react'
 import { Tabs } from "@yazanaabed/react-tabs";
 import Residential from '../components/residential'
+import Apartaments from '../components/apartments'
 import styled from '@emotion/styled';
 
 
@@ -21,7 +22,7 @@ const Home = () => {
         <Div > <Residential></Residential> </Div>
       </Tabs.Tab>
       <Tabs.Tab id="tab2" title="Apartamentos">
-        <Div >  </Div>
+        <Div >  <Apartaments></Apartaments> </Div>
       </Tabs.Tab>
       <Tabs.Tab id="tab3" title="Asambleas">
         <Div >  </Div>
