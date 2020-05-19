@@ -1,34 +1,31 @@
 import React from 'react'
-import { Tabs } from "@yazanaabed/react-tabs";
-import Residential from '../components/residential'
+import { Tab, Tabs } from 'react-bootstrap'
 import Apartaments from '../components/apartments'
-import styled from '@emotion/styled';
+import Residential from '../components/residential'
+import styled from '@emotion/styled'
 
 
-const Div = styled.div `
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  text-align: "center";
-`;
+const MarginTop = styled.div`
+  margin-top: 5%;
+`
 
 const Home = () => {
-  return(
-    <Div>
-    <Tabs
-      activeTab={{
-        id: "tab1"
-      }}
-    >
-      <Tabs.Tab id="tab1" title="Unidades residenciales">
-        <Div > <Residential></Residential> </Div>
-      </Tabs.Tab>
-      <Tabs.Tab id="tab2" title="Apartamentos">
-        <Div >  <Apartaments></Apartaments> </Div>
-      </Tabs.Tab>
-      <Tabs.Tab id="tab3" title="Asambleas">
-        <Div >  </Div>
-      </Tabs.Tab>
+  return (
+    <Tabs defaultActiveKey="tab1" id="uncontrolled-tab-example">
+      <Tab eventKey="tab1" title="Apartamentos">
+        <MarginTop>
+          <Apartaments />
+        </MarginTop>
+      </Tab>
+      <Tab eventKey="tab2" title="Unidades residenciales">
+        <MarginTop>
+          <Residential />
+        </MarginTop>
+      </Tab>
+      <Tab eventKey="tab3" title="Asambleas">
+        <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus ullam ab vitae nesciunt iste ea minima modi, culpa quis incidunt, nisi earum quisquam consectetur autem maiores. Voluptates aliquam sed numquam!</h1>
+      </Tab>
     </Tabs>
-  </Div>
   )
 }
 
