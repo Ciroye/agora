@@ -46,8 +46,6 @@ function Apartments() {
         setApartments(apts);
       });
     };
-
-
     fetchData();
   }, []);
 
@@ -66,15 +64,19 @@ function Apartments() {
   }, []);
 
   const onCreate = () => {
-    setShow(false);
-
-    firebase.collection(APT_COLLECTION).add({
+    if (newResidentialApartments == ''){
+      setShowError(true);
+    }else{
+      firebase.collection(APT_COLLECTION).add({
       admin: newAdminApartments,
       cof: newCofApartments,
       number: newNumberApartments,
       password: newPasswordApartments,
       residential: newResidentialApartments,
-    });
+      });
+      setShow(false);
+      setShowError(false);
+    }  
   };
 
   async function onDelete(id) {
@@ -96,6 +98,8 @@ function Apartments() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const [showError, setShowError] = useState(false);
+
   return (
     <Container>
       <Row>
@@ -112,8 +116,8 @@ function Apartments() {
           </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Alert  variant={"danger"}>
-              Error
+            <Alert  variant={"danger"} show={showError}>
+              Debes seleccionar una unidad
             </Alert>
             <Form>
               <Form.Group controlId="formBasicEmail">
