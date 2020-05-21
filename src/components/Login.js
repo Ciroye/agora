@@ -4,7 +4,7 @@ import { Modal, Button, Alert, Spinner } from 'react-bootstrap';
 import { setApartament } from '../actions'
 import { connect } from 'react-redux';
 import fb from '../firebase';
-import { APT_COLLECTION } from "../constants/constants";
+import { APT_COLLECTION, ASSEMBLY_COLLECTION } from "../constants/constants";
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -34,6 +34,7 @@ class Login extends Component {
             [target.name]: target.value
         });
     }
+
     //TODO: Validar cuando el usuario sea administrador
     login() {
         this.setState({ loading: true })
@@ -41,14 +42,14 @@ class Login extends Component {
         fb.collection(APT_COLLECTION).where("number", "==", parseInt(this.state.appartment))
             .where("password", "==", this.state.password).get()
             .then((qs) => {
-                if (qs.docs.length === 0) {
+                if (qs.docs.length === 0) { // Usuario o contraseña incorrectas
                     this.setState({ error: "Apartamento o contraseña incorreta" })
                 } else {
                     const apartament = qs.docs[0].data();
-                    if (apartament.residential.id !== this.props.residential.id) {
+                    if (apartament.residential !== this.props.residential.id) {// El apartamento no pertenece a la residencial de la conferencia
                         this.setState({ error: "Usted no puede unirse a esta conferencia." })
-                    } else {
-                        this.props.setApartament(apartament);
+                    } else { // Ok
+                        this.props.setApartament({ ...apartament, id: qs.docs[0].id });
                         this.props.onComplete();
                     }
                 }
@@ -79,7 +80,7 @@ class Login extends Component {
                     >
                         {this.state.error}
                     </Alert>
-                    <Form autoComplete="off">
+                    <Form autoComplete="off" onSubmit={this.login.bind(this)}>
                         <Form.Group>
                             <Form.Label>Apartamento</Form.Label>
                             <Form.Control
@@ -105,6 +106,7 @@ class Login extends Component {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button
+                        type="submit"
                         disabled={this.state.loading}
                         onClick={this.login.bind(this)}>
                         Iniciar

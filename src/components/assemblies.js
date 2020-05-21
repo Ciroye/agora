@@ -208,7 +208,7 @@ function Assembly() {
                   <td>{assembly.date}</td>
                   <td>{assembly.residentialname}</td>
                   <td>
-                    <a href="http://google.com">
+                    <a target="blank" href={`${window.location.href}meet?id=${assembly.url}`}>
                       {assembly.url}
                     </a>
                   </td>

@@ -45,3 +45,6 @@ export const GUEST_TOOLBAR_BUTTONS = [
 export const APT_COLLECTION = "apartaments";
 export const ASSEMBLY_COLLECTION = "assembly";
 export const RESIDENTIAL_COLLECTION = "residential";
+export const PARTICIPANTS_COLLECTION = "participants";
+export const QUESTION_COLLECTION = "question";
+export const ANSWERS_COLLECTION = "answers";

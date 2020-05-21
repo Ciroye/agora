@@ -1,4 +1,4 @@
-import React, {  useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Table, Button, Modal, Form, Container, Row, Col, Alert } from "react-bootstrap";
 import firebase from "../firebase";
 import styled from "@emotion/styled";
@@ -23,7 +23,7 @@ function Apartments() {
   const [residentials, setResidentials] = useState([]);
   const [newAdminApartments, setnewAdminApartments] = useState(false);
   const [newCofApartments, setnewCofApartments] = useState([]);
-  const [newNumberApartments, setnewNumberApartments] = useState([]);
+  const [newNumberApartments, setnewNumberApartments] = useState("");
   const [newPasswordApartments, setnewPasswordApartments] = useState([]);
   const [newResidentialApartments, setnewResidentialApartments] = useState("");
 
@@ -64,19 +64,19 @@ function Apartments() {
   }, []);
 
   const onCreate = () => {
-    if (newResidentialApartments == ''){
+    if (newResidentialApartments == '') {
       setShowError(true);
-    }else{
+    } else {
       firebase.collection(APT_COLLECTION).add({
-      admin: newAdminApartments,
-      cof: newCofApartments,
-      number: newNumberApartments,
-      password: newPasswordApartments,
-      residential: newResidentialApartments,
+        admin: newAdminApartments,
+        cof: newCofApartments,
+        number: parseInt(newNumberApartments),
+        password: newPasswordApartments,
+        residential: newResidentialApartments,
       });
       setShow(false);
       setShowError(false);
-    }  
+    }
   };
 
   async function onDelete(id) {
@@ -116,7 +116,7 @@ function Apartments() {
           </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Alert  variant={"danger"} show={showError}>
+            <Alert variant={"danger"} show={showError}>
               Debes seleccionar una unidad
             </Alert>
             <Form>
@@ -211,7 +211,7 @@ function Apartments() {
                   <td>{apartment.residentialname}</td>
                   <td>{apartment.admin ? "Sí" : "No"}</td>
                   <td>
-                    <FontAwesomeIcon icon={faTrash} className="text-danger pointer" onClick={() => onDelete(apartment.id)}/>
+                    <FontAwesomeIcon icon={faTrash} className="text-danger pointer" onClick={() => onDelete(apartment.id)} />
                   </td>
                 </tr>
               ))}

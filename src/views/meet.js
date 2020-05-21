@@ -1,12 +1,15 @@
 import React, { Component, Fragment } from "react";
-import { ASSEMBLY_COLLECTION } from "../constants/constants";
-import fb from "../firebase";
-import { Modal, Container, Row, Col } from 'react-bootstrap';
-import Login from '../components/login'
+import { Col, Container, Modal, Row } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { setResidential, setAssembly } from '../actions'
-import { getResidential } from '../utils/fb'
-import Jitsi from '../components/jitsi'
+import { setAssembly, setResidential } from '../actions';
+import CreateQuestion from '../components/create-question';
+import Jitsi from '../components/jitsi';
+import Login from '../components/login';
+import Question from '../components/question';
+import Statistics from '../components/statistics';
+import { ASSEMBLY_COLLECTION, QUESTION_COLLECTION } from "../constants/constants";
+import fb from "../firebase";
+import { getResidential } from '../utils/fb';
 
 
 const mapStateToProps = (state) => {
@@ -29,7 +32,8 @@ const mapDispatchToProps = (dispatch) => {
 class Meet extends Component {
   state = {
     validAssembly: true,
-    logued: false
+    logued: false,
+    questions: []
   };
 
   validateAssembly() {
@@ -41,8 +45,8 @@ class Meet extends Component {
           this.setState({ validAssembly: false })
         } else {
           const assembly = qs.docs[0].data();
-          this.props.setAssembly(assembly);
-          getResidential(assembly.residential.id).then(doc => {
+          this.props.setAssembly({ ...assembly, id: qs.docs[0].id });
+          getResidential(assembly.residential).then(doc => {
             this.props.setResidential(doc);
           })
         }
@@ -58,14 +62,25 @@ class Meet extends Component {
 
   onComplete = () => {
     this.setState({ logued: true })
+    fb.collection(QUESTION_COLLECTION).where("assembly", "==", this.props.assembly.id).onSnapshot((snap) => {
+      const questions = snap.docs.map((m) => {
+        return {
+          id: m.id,
+          ...m.data()
+        }
+      });
+      this.setState({ questions })
+    })
   }
+
 
   componentDidMount() {
     this.validateAssembly();
+    
   }
 
   render() {
-    const { validAssembly, logued } = this.state;
+    const { validAssembly, logued, questions } = this.state;
     return <Fragment>
       <Modal centered show={!validAssembly} onHide={() => { }}>
         <Modal.Header>
@@ -81,8 +96,10 @@ class Meet extends Component {
             <Col lg="10" style={{ height: "100vh", paddingLeft: 0 }}>
               <Jitsi></Jitsi>
             </Col>
-            <Col>
-              hello world
+            <Col style={{ maxHeight: "100vh", overflowY: "scroll" }}>
+              <Statistics />
+              <CreateQuestion />
+              {questions.map((v, i) => <Question data={v} key={i} />)}
             </Col>
           </Row>
         </Container>

@@ -17,6 +17,21 @@ const reducer = (state, action) => {
         ...state,
         assembly: action.assembly,
       };
+    case actionTypes.PARTICIPANTS_CHANGE:
+      return {
+        ...state,
+        participants: action.participants,
+      };
+    case actionTypes.QUORUM_CHANGE:
+      return {
+        ...state,
+        quorum: action.quorum,
+      };
+    case actionTypes.APARTAMENTS_CHANGE:
+      return {
+        ...state,
+        apartaments: action.apartaments,
+      };
     default:
       return { ...state };
   }

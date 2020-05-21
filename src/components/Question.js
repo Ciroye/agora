@@ -1,141 +1,98 @@
-import React, {Fragment, useState, useEffect} from 'react'
 import styled from '@emotion/styled';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
-import firebase from '../firebase'
-import DropdownButton from 'react-bootstrap/DropdownButton';
-  
+import React, { Component } from 'react';
+import { Button, ButtonGroup } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { setApartament } from '../actions';
+import { ANSWERS_COLLECTION, QUESTION_COLLECTION } from "../constants/constants";
+import fb from "../firebase";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
 
-const Input = styled.input `
-    height: calc(1.5em + 1rem + 2px); 
-    padding: .5rem 1rem; 
-    font-size: .9rem; 
-    line-height: 1.5; 
-    border-radius: 3px;
-    width: 100%;
-`;
+const Content = styled.div({
+    marginTop: 20,
+    marginBottom: 20,
+    ".btn-group": {
+        width: "100%"
+    },
+    ".live-results": {
+        marginBottom: 20
+    },
+    ".results": {
+        textAlign: "center",
+    }
+})
 
-const Cart1 = styled.div `
-    border-radius: 3px;
-    margin: 0;
-    position: absolute;
-    top: 48%;
-    left: 85%;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    width: 16%;
-`;
-
-const Cart2 = styled.div `
-    border-radius: 3px;
-    margin: 0;
-    position: absolute;
-    top: 72%;
-    left: 85%;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    width: 16%;
-`;
-
-
-function useQuestions () {
-    const [questions, setQuestions] = useState([]);
-
-    useEffect(() => {
-        firebase.firestore().collection('agora').doc("asamblea1").collection('questions').onSnapshot((snapshot) => {
-            const newQuestion  = snapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data()
-            }))
-            setQuestions(newQuestion)
-        })
-    }, [])
-    return questions
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setApartament(apartament) {
+            dispatch(setApartament(apartament))
+        }
+    }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        ...state
+    };
+};
 
-function Question(props) {
-    const [title, setNewQestion] = useState('');
-    function onSubmit(e) {
-        e.preventDefault();
-        firebase.firestore().collection('agora').doc("asamblea1").collection('questions').add({
-            title,
-            options:[{
-                title:'Si',
-                users:[],
-            },
-            {
-                title:'No',
-                users:[],
-            }]
+class Question extends Component {
+    state = {
+        hasVote: false
+    };
+
+    componentDidMount() {
+        fb.collection(ANSWERS_COLLECTION).where("apartment", "==", this.props.apartament.id).where("question", "==", this.props.data.id).get().then((qs) => {
+            if (qs.docs.length > 0) {
+                this.setState({ hasVote: true })
+            }
         })
-        .then(() => {
-            setNewQestion('');
-            props.onHide();
+
+        fb.collection(ANSWERS_COLLECTION).where("question", "==", this.props.data.id).onSnapshot((snap) => {
+            const answers = snap.docs.map((m) => {
+                return {
+                    id: m.id,
+                    ...m.data()
+                }
+            })
+            console.log(answers);
         })
     }
 
-    const questions = useQuestions();
-    return (
-        <Fragment>
-            <Modal
-            {...props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-            >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Crear pregunta
-                </Modal.Title>
-            </Modal.Header>
-            
-            <Modal.Body>
-                <div className='form-group '>
-                    <Input
-                        type="string"
-                        className="form-control"
-                        placeholder="Crea tu pregunta"
-                        onChange = {e => setNewQestion(e.currentTarget.value)}
-                        required
-                    ></Input>
-                </div>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button onClick={onSubmit}> Crear pregunta</Button>
-                <Button onClick={props.onHide}>Cerrar</Button>
-            </Modal.Footer>
-            </Modal>
-            <Cart1>
-            {questions.map((question) =>
-                <div>
-                    <span> {question.title}</span>
-                    <li>
-                        <span> {question.options[0].title}</span>
-                        <span> {question.options[0].users.length}</span>
-                    </li>
-                    <li>
-                        <span> {question.options[1].title}</span>
-                        <span> {question.options[1].users.length}</span>
-                    </li>
-                </div>
-            )}
-            </Cart1>
-            <Cart2>
-                <DropdownButton id="dropdown-basic-button" title="Preguntas creadas">
-                <ul class="list-group">
-                {questions.map((question) => 
-                    <li class="list-group-item d-flex justify-content-between align-items-center" key={question.id}>
-                        {question.title}
-                    </li>
-                )}
-                </ul>
-                </DropdownButton>
-            </Cart2>
+    delete = () => {
+        if (window.confirm("Seguro que quiere eliminar la pregunta?")) {
+            fb.collection(QUESTION_COLLECTION).doc(this.props.data.id).delete();
+        }
+    }
 
-        </Fragment>
-    );
+    vote(decision) {
+        fb.collection(ANSWERS_COLLECTION).add({
+            apartment: this.props.apartament.id,
+            approve: decision,
+            question: this.props.data.id
+        })
+        this.setState({ hasVote: true })
+    }
+
+    render() {
+        return <Content>
+            <div className="live-results">
+                <h5>Resultados</h5>
+                <div className="results">
+                    <span className="mr-20"><strong>Sí: </strong> {25} %</span>
+                    <span><strong>No: </strong>{40}%</span> <br />
+                </div>
+            </div>
+
+            <p>{this.props.data.title}</p>
+            <ButtonGroup aria-label="Basic example">
+                <Button variant="primary" disabled={this.state.hasVote} onClick={this.vote.bind(this, true)}>Sí</Button>
+                <Button variant="secondary" disabled={this.state.hasVote} onClick={this.vote.bind(this, false)}>No</Button>
+                <Button variant="danger"><FontAwesomeIcon icon={faTrash} className="pointer" onClick={this.delete} /></Button>
+            </ButtonGroup>
+        </Content>
+    }
 }
 
 
-export default Question;
+export default connect(mapStateToProps, mapDispatchToProps)(Question)
