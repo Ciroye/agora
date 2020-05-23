@@ -38,7 +38,8 @@ const mapStateToProps = (state) => {
 
 class Question extends Component {
     state = {
-        hasVote: false
+        hasVote: false,
+        answers: []
     };
 
     componentDidMount() {
@@ -55,8 +56,31 @@ class Question extends Component {
                     ...m.data()
                 }
             })
-            console.log(answers);
+            this.setState({ answers })
         })
+    }
+
+    getResults() {
+        const yes = this.state.answers.filter((m) => m.approve).slice().map(m => m.apartment);
+        const no = this.state.answers.filter((m) => !m.approve).slice().map(m => m.apartment);;
+
+        const apartaments = this.props.apartaments;
+
+        const yesApts = apartaments.filter(m => yes.includes(m.id));
+        const noApts = apartaments.filter(m => no.includes(m.id));
+
+        let auxY = 0, auxN = 0;
+        for (const y of yesApts) {
+            auxY += parseFloat(y.cof);
+        }
+        for (const n of noApts) {
+            auxN += parseFloat(n.cof);
+        }
+
+        return {
+            yes: auxY,
+            no: auxN
+        }
     }
 
     delete = () => {
@@ -75,12 +99,13 @@ class Question extends Component {
     }
 
     render() {
+        const results = this.getResults();
         return <Content>
             <div className="live-results">
                 <h5>Resultados</h5>
                 <div className="results">
-                    <span className="mr-20"><strong>Sí: </strong> {25} %</span>
-                    <span><strong>No: </strong>{40}%</span> <br />
+                    <span className="mr-20"><strong>Sí: </strong> {results.yes} %</span>
+                    <span><strong>No: </strong>{results.no}%</span> <br />
                 </div>
             </div>
 
@@ -88,7 +113,7 @@ class Question extends Component {
             <ButtonGroup aria-label="Basic example">
                 <Button variant="primary" disabled={this.state.hasVote} onClick={this.vote.bind(this, true)}>Sí</Button>
                 <Button variant="secondary" disabled={this.state.hasVote} onClick={this.vote.bind(this, false)}>No</Button>
-                <Button variant="danger"><FontAwesomeIcon icon={faTrash} className="pointer" onClick={this.delete} /></Button>
+                {this.props.apartament.admin && <Button variant="danger"><FontAwesomeIcon icon={faTrash} className="pointer" onClick={this.delete} /></Button>}
             </ButtonGroup>
         </Content>
     }

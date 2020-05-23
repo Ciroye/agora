@@ -98,7 +98,9 @@ class Meet extends Component {
             </Col>
             <Col style={{ maxHeight: "100vh", overflowY: "scroll" }}>
               <Statistics />
-              <CreateQuestion />
+              {this.props.apartament.admin && <CreateQuestion />}
+              
+
               {questions.map((v, i) => <Question data={v} key={i} />)}
             </Col>
           </Row>

@@ -46,9 +46,14 @@ class Login extends Component {
                     this.setState({ error: "Apartamento o contraseña incorreta" })
                 } else {
                     const apartament = qs.docs[0].data();
-                    if (apartament.residential !== this.props.residential.id) {// El apartamento no pertenece a la residencial de la conferencia
-                        this.setState({ error: "Usted no puede unirse a esta conferencia." })
-                    } else { // Ok
+                    if (!apartament.admin) {
+                        if (apartament.residential !== this.props.residential.id) {// El apartamento no pertenece a la residencial de la conferencia
+                            this.setState({ error: "Usted no puede unirse a esta conferencia." })
+                        } else { // Ok
+                            this.props.setApartament({ ...apartament, id: qs.docs[0].id });
+                            this.props.onComplete();
+                        }
+                    }else { // Ok
                         this.props.setApartament({ ...apartament, id: qs.docs[0].id });
                         this.props.onComplete();
                     }
