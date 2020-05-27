@@ -76,7 +76,6 @@ class Meet extends Component {
 
   componentDidMount() {
     this.validateAssembly();
-    
   }
 
   render() {
@@ -84,7 +83,7 @@ class Meet extends Component {
     return <Fragment>
       <Modal centered show={!validAssembly} onHide={() => { }}>
         <Modal.Header>
-          <Modal.Title>Erro al unirse a la sesión</Modal.Title>
+          <Modal.Title>Error al unirse a la sesión</Modal.Title>
         </Modal.Header>
         <Modal.Body>La sesión a la que está intentando acceder ya no está activa o no existe.</Modal.Body>
       </Modal>
@@ -99,8 +98,6 @@ class Meet extends Component {
             <Col style={{ maxHeight: "100vh", overflowY: "scroll" }}>
               <Statistics />
               {this.props.apartament.admin && <CreateQuestion />}
-              
-
               {questions.map((v, i) => <Question data={v} key={i} />)}
             </Col>
           </Row>

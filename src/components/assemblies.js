@@ -19,6 +19,15 @@ import { getResidential } from "../utils/fb";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
+function guidGenerator() {
+  var S4 = function() {
+     return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+  };
+  return (S4() + S4() + S4());
+}
+
+const id = guidGenerator();
+
 const Input = styled.input`
   height: calc(1.5em + 1rem + 2px);
   padding-top: 20px;
@@ -75,11 +84,13 @@ function Assembly() {
   const onCreate = () => {
     setShow(false);
 
-    firebase.collection(ASSEMBLY_COLLECTION).add({
+    firebase.collection(ASSEMBLY_COLLECTION).doc(id).set({
       date: newDateAssemblies,
       name: newNameAssemblies,
       residential: newResidentialAssemblies,
       url: newUrlAssemblies,
+    });
+    firebase.collection(ASSEMBLY_COLLECTION).doc(id).collection('participants').add({  
     });
   };
 
@@ -102,7 +113,6 @@ function Assembly() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  
   return (
     <Container>
       <Row>
@@ -208,7 +218,10 @@ function Assembly() {
                   <td>{assembly.date}</td>
                   <td>{assembly.residentialname}</td>
                   <td>
-                    <a target="blank" href={`${window.location.href}meet?id=${assembly.url}`}>
+                    <a
+                      target="blank"
+                      href={`${window.location.href}meet?id=${assembly.url}`}
+                    >
                       {assembly.url}
                     </a>
                   </td>

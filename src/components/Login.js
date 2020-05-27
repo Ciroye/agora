@@ -38,7 +38,6 @@ class Login extends Component {
     //TODO: Validar cuando el usuario sea administrador
     login() {
         this.setState({ loading: true })
-
         fb.collection(APT_COLLECTION).where("number", "==", parseInt(this.state.appartment))
             .where("password", "==", this.state.password).get()
             .then((qs) => {
