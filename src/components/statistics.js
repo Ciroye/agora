@@ -41,8 +41,6 @@ class Statistics extends Component {
         fb.collection(ASSEMBLY_COLLECTION).doc(this.props.assembly.id).collection(PARTICIPANTS_COLLECTION).onSnapshot((snapshot) => {
             const participants = snapshot.docs.map(m => parseInt(m.data().apartament));
             getCof(this.props.residential.id, participants.length > 0 ? Array.from(new Set(participants)) : [""]).then((coefficients) => {
-                console.log(coefficients);
-                
                 this.setState({ coefficients }, () => {
                     this.sumCoefficients();
                 })

@@ -1,28 +1,45 @@
-import React, { Fragment, Component } from "react";
+import styled from "@emotion/styled";
+import React, { Component, Fragment } from "react";
 import { Tab, Tabs } from "react-bootstrap";
 import Apartaments from "../components/apartments";
-import Residential from "../components/residential";
 import Assembly from "../components/assemblies";
-import styled from "@emotion/styled";
 import Login from "../components/login";
+import { connect } from 'react-redux';
+import Residential from "../components/residential";
 
 
 const MarginTop = styled.div`
   margin-top: 5%;
 `;
 
+const mapStateToProps = (state) => {
+  return {
+    ...state
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+  }
+}
+
+
 class Home extends Component {
 
   state = {
-    logued: true
+    logued: false
   };
 
+  onComplete = () => {
+    this.setState({ logued: true })
+  }
+
   render() {
-    const {logued} = this.state;
+    const { logued } = this.state;
     return (
       <Fragment>
-        <Login show={!logued} />
-        {(logued) &&
+        <Login show={!logued} onComplete={this.onComplete} />
+        {logued &&
           <Tabs defaultActiveKey="tab1" id="uncontrolled-tab-example">
             <Tab eventKey="tab1" title="Apartamentos">
               <MarginTop>
@@ -45,5 +62,4 @@ class Home extends Component {
     );
   }
 }
-
-export default Home;
+export default connect(mapStateToProps, mapDispatchToProps)(Home)

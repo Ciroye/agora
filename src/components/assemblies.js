@@ -1,32 +1,11 @@
-import React, { useState, useEffect } from "react";
-import {
-  Table,
-  Button,
-  Modal,
-  Form,
-  Container,
-  Row,
-  Col,
-  Alert,
-} from "react-bootstrap";
-import firebase from "../firebase";
 import styled from "@emotion/styled";
-import {
-  ASSEMBLY_COLLECTION,
-  RESIDENTIAL_COLLECTION,
-} from "../constants/constants";
-import { getResidential } from "../utils/fb";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-
-function guidGenerator() {
-  var S4 = function() {
-     return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-  };
-  return (S4() + S4() + S4());
-}
-
-const id = guidGenerator();
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useEffect, useState } from "react";
+import { Button, Col, Container, Form, Modal, Row, Table } from "react-bootstrap";
+import { ASSEMBLY_COLLECTION, RESIDENTIAL_COLLECTION, PARTICIPANTS_COLLECTION } from "../constants/constants";
+import firebase from "../firebase";
+import { getResidential } from "../utils/fb";
 
 const Input = styled.input`
   height: calc(1.5em + 1rem + 2px);
@@ -84,14 +63,17 @@ function Assembly() {
   const onCreate = () => {
     setShow(false);
 
-    firebase.collection(ASSEMBLY_COLLECTION).doc(id).set({
+    firebase.collection(ASSEMBLY_COLLECTION).add({
       date: newDateAssemblies,
       name: newNameAssemblies,
       residential: newResidentialAssemblies,
       url: newUrlAssemblies,
-    });
-    firebase.collection(ASSEMBLY_COLLECTION).doc(id).collection('participants').add({  
-    });
+    }).then((res) => {
+      firebase.collection(ASSEMBLY_COLLECTION).doc(res.id).collection(PARTICIPANTS_COLLECTION).add({
+        apartament: "123456789",
+        jitsiid: "jitsiid"
+      });
+    })
   };
 
   async function onDelete(id) {

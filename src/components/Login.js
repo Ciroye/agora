@@ -1,10 +1,10 @@
+import React, { Component } from 'react';
+import { Alert, Button, Modal, Spinner } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
-import React, { Component } from 'react'
-import { Modal, Button, Alert, Spinner } from 'react-bootstrap';
-import { setApartament } from '../actions'
 import { connect } from 'react-redux';
+import { setApartament } from '../actions';
+import { APT_COLLECTION } from "../constants/constants";
 import fb from '../firebase';
-import { APT_COLLECTION, ASSEMBLY_COLLECTION } from "../constants/constants";
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -46,13 +46,19 @@ class Login extends Component {
                 } else {
                     const apartament = qs.docs[0].data();
                     if (!apartament.admin) {
-                        if (apartament.residential !== this.props.residential.id) {// El apartamento no pertenece a la residencial de la conferencia
+                        if (this.props.residential) {
+                            if (apartament.residential !== this.props.residential.id) {// El apartamento no pertenece a la residencial de la conferencia
+                                this.setState({ error: "Usted no puede unirse a esta conferencia." })
+                            } else { // Ok
+                                this.props.setApartament({ ...apartament, id: qs.docs[0].id });
+                                this.props.onComplete();
+                            }
+                        } else {
                             this.setState({ error: "Usted no puede unirse a esta conferencia." })
-                        } else { // Ok
-                            this.props.setApartament({ ...apartament, id: qs.docs[0].id });
-                            this.props.onComplete();
                         }
-                    }else { // Ok
+
+
+                    } else { // Ok
                         this.props.setApartament({ ...apartament, id: qs.docs[0].id });
                         this.props.onComplete();
                     }

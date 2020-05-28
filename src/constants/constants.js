@@ -31,6 +31,7 @@ export const ADMIN_TOOLBAR_BUTTONS = [
 
 export const GUEST_TOOLBAR_BUTTONS = [
   "microphone",
+  "camera",
   "closedcaptions",
   "desktop",
   "fodeviceselection",

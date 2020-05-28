@@ -43,7 +43,7 @@ class Question extends Component {
     };
 
     componentDidMount() {
-        fb.collection(ANSWERS_COLLECTION).where("apartment", "==", this.props.apartament.id).where("question", "==", this.props.data.id).get().then((qs) => {
+        fb.collection(ANSWERS_COLLECTION).where("apartment", "==", this.props.apartament.id).where("question", "==", this.props.data.id).onSnapshot((qs) => {
             if (qs.docs.length > 0) {
                 this.setState({ hasVote: true })
             }

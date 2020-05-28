@@ -31,11 +31,12 @@ class Jitsi extends Component {
 
   onParticipantJoined = ({ id, displayName }) => {
     if (displayName != this.props.apartament.number) {
-      console.log(id, displayName);
-      const assembly = this.props.assembly;
-      fb.collection(ASSEMBLY_COLLECTION).doc(assembly.id).collection(PARTICIPANTS_COLLECTION).add(
-        { apartament: displayName, jitsiid: id }
-      );
+      if (!isNaN(parseInt(displayName))) {
+        const assembly = this.props.assembly;
+        fb.collection(ASSEMBLY_COLLECTION).doc(assembly.id).collection(PARTICIPANTS_COLLECTION).add(
+          { apartament: displayName, jitsiid: id }
+        );
+      }
     }
     this.updateParticipants();
   }
@@ -67,6 +68,7 @@ class Jitsi extends Component {
   }
 
   componentDidMount() {
+
     const jitsi = new window.JitsiMeetExternalAPI("camarin.ddns.net", {
       roomName: this.props.assembly.name,
       width: "100%",
@@ -83,7 +85,7 @@ class Jitsi extends Component {
       userInfo: {
         displayName: this.props.apartament.number
       },
-      configOverwrite: { startWithAudioMuted: !this.props.apartament.admin },
+      configOverwrite: { startWithAudioMuted: !this.props.apartament.admin, startAudioOnly: !this.props.apartament.admin },
       onload: this.onJitsiInit
     });
 
