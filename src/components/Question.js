@@ -98,14 +98,22 @@ class Question extends Component {
         this.setState({ hasVote: true })
     }
 
+
+    round(number) {
+        if (number) {
+            return Math.round((number + Number.EPSILON) * 100) / 100;
+        }
+        return 0;
+    }
+
     render() {
         const results = this.getResults();
         return <Content>
             <div className="live-results">
                 <h5>Resultados</h5>
                 <div className="results">
-                    <span className="mr-20"><strong>Sí: </strong> {results.yes} %</span>
-                    <span><strong>No: </strong>{results.no}%</span> <br />
+                    <span className="mr-20"><strong>Sí: </strong> {this.round(results.yes)} %</span>
+                    <span><strong>No: </strong>{this.round(results.no)}%</span> <br />
                 </div>
             </div>
 

@@ -68,8 +68,7 @@ class Jitsi extends Component {
   }
 
   componentDidMount() {
-
-    const jitsi = new window.JitsiMeetExternalAPI("camarin.ddns.net", {
+    const jitsi = new window.JitsiMeetExternalAPI("jitsi.muneratorres.com", {
       roomName: this.props.assembly.name,
       width: "100%",
       height: "100%",

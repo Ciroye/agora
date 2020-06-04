@@ -63,6 +63,13 @@ class Statistics extends Component {
         this.setState({ quorum: coefficient })
     }
 
+    round(number) {
+        if (number) {
+            return Math.round((number + Number.EPSILON) * 100) / 100;
+        }
+        return 0;
+    }
+
     render() {
         const { quorum } = this.state;
         return (
@@ -72,7 +79,7 @@ class Statistics extends Component {
                 <h5>Información de la asamblea</h5>
                 <span><strong>Participantes: </strong>{this.props.participants} de {this.props.residential.total}</span> <br />
                 <span><strong>Habilitado votación: </strong>{quorum > 50 ? "Sí" : "No"}</span><br />
-                <span><strong>Quorum: </strong>{quorum}%</span>
+                <span><strong>Quorum: </strong>{this.round(quorum)}%</span>
                 <hr />
             </Stats>
         );
