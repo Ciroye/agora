@@ -2,14 +2,14 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBtgriYpLyn037HlUdGxWTUANd_yktBe-4",
-  authDomain: "agora-13c30.firebaseapp.com",
-  databaseURL: "https://agora-13c30.firebaseio.com",
-  projectId: "agora-13c30",
-  storageBucket: "agora-13c30.appspot.com",
-  messagingSenderId: "857139755099",
-  appId: "1:857139755099:web:21d5b884be863481e4277e",
-  measurementId: "G-VRETGPS7YQ",
+  apiKey: "AIzaSyAPxzUsW44AIRet211OTqk_D903Z4N0h3E",
+  authDomain: "agora-question.firebaseapp.com",
+  databaseURL: "https://agora-question.firebaseio.com",
+  projectId: "agora-question",
+  storageBucket: "agora-question.appspot.com",
+  messagingSenderId: "939201026710",
+  appId: "1:939201026710:web:bab6eadbd4b2c3ed36c0b7",
+  measurementId: "G-7JYMQBNS0Q"
 };
 
 if (!firebase.apps.length) {
