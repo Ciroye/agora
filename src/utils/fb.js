@@ -43,7 +43,6 @@ export const getCof = async (residentialid, apartaments) => {
 }
 
 export const getApartaments = async (residentialid) => {
-
     const data = await fb.collection(APT_COLLECTION).where("residential", "==", residentialid).get();
     return data.docs.map((m) => {
         return {
@@ -51,5 +50,12 @@ export const getApartaments = async (residentialid) => {
             ...m.data()
         }
     });
+}
 
+export const getApartamentsById = async (apartmentId) => {
+    const doc = await (await fb.collection(APT_COLLECTION).doc(apartmentId).get()).data();
+    return {
+        id:apartmentId,
+        ...doc
+    }
 }

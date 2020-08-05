@@ -3,9 +3,9 @@ import { Col, Container, Modal, Row } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { setAssembly, setResidential } from '../actions';
 import CreateQuestion from '../components/create-question';
-import Jitsi from '../components/jitsi';
-import Login from '../components/login';
-import Question from '../components/question';
+// import Jitsi from '../components/jitsi';
+import Login from '../components/Login';
+import Question from '../components/Question';
 import Statistics from '../components/statistics';
 import { ASSEMBLY_COLLECTION, QUESTION_COLLECTION } from "../constants/constants";
 import fb from "../firebase";
@@ -92,10 +92,10 @@ class Meet extends Component {
         (validAssembly && logued) &&
         <Container fluid>
           <Row>
-            <Col lg="10" style={{ height: "100vh", paddingLeft: 0 }}>
-              <Jitsi></Jitsi>
+            <Col lg="4" style={{ height: "100vh", paddingLeft: 0 }}>
+              {/* <Jitsi></Jitsi> */}
             </Col>
-            <Col style={{ maxHeight: "100vh", overflowY: "scroll" }}>
+            <Col lg="4" style={{ maxHeight: "100vh" }}>
               <Statistics />
               {this.props.apartament.admin && <CreateQuestion />}
               {questions.map((v, i) => <Question data={v} key={i} />)}
