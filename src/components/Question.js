@@ -83,8 +83,20 @@ class Question extends Component {
         }
     }
 
-    delete = () => {
+    delete = async () => {
         if (window.confirm("Seguro que quiere eliminar la pregunta?")) {
+            const data = await fb.collection(ANSWERS_COLLECTION).where("question", "==", this.props.data.id).get()
+            data.docs.map((m) => {
+                fb.collection(ANSWERS_COLLECTION).doc(m.id).delete().then(function () {
+                    console.log("Document successfully deleted!");
+                }).catch(function (error) {
+                    console.error("Error removing document: ", error);
+                });
+                return {
+                    id: m.id,
+                    ...m.data()
+                }
+            })
             fb.collection(QUESTION_COLLECTION).doc(this.props.data.id).delete();
         }
     }
@@ -121,7 +133,7 @@ class Question extends Component {
             <ButtonGroup aria-label="Basic example">
                 <Button variant="primary" disabled={this.state.hasVote} onClick={this.vote.bind(this, true)}>Sí</Button>
                 <Button variant="secondary" disabled={this.state.hasVote} onClick={this.vote.bind(this, false)}>No</Button>
-                {this.props.apartament.admin && <Button variant="danger"><FontAwesomeIcon icon={faTrash} className="pointer" onClick={this.delete} /></Button>}
+                {this.props.apartament.admin && <Button variant="danger" onClick={this.delete}><FontAwesomeIcon icon={faTrash} className="pointer" /></Button>}
             </ButtonGroup>
         </Content>
     }
