@@ -69,10 +69,10 @@ function Assembly() {
       residential: newResidentialAssemblies,
       url: newUrlAssemblies,
     }).then((res) => {
-      firebase.collection(ASSEMBLY_COLLECTION).doc(res.id).collection(PARTICIPANTS_COLLECTION).add({
-        apartament: "123456789",
-        jitsiid: "jitsiid"
-      });
+      // firebase.collection(ASSEMBLY_COLLECTION).doc(res.id).collection(PARTICIPANTS_COLLECTION).add({
+      //   apartament: "123456789",
+      //   jitsiid: "jitsiid"
+      // });
     })
   };
 

@@ -6,7 +6,9 @@ import { APT_COLLECTION, RESIDENTIAL_COLLECTION } from "../constants/constants";
 import { getResidential } from '../utils/fb'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
-
+import { useToasts } from 'react-toast-notifications'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Input = styled.input`
   height: calc(1.5em + 1rem + 2px);
@@ -87,12 +89,23 @@ function Apartments() {
 
     if (files.docs.length === 0) {
       firebase.collection(APT_COLLECTION).doc(id).delete();
+      notify();
     } else {
       window.alert(
         "No se puede borrar esta apartamento por que ya participo de asambleas"
       );
     }
   }
+
+  const notify = () => toast.info('Se elimino el registro', {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    });;
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -102,6 +115,16 @@ function Apartments() {
 
   return (
     <Container>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Row>
         <Modal
           show={show}
