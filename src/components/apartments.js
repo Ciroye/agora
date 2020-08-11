@@ -71,7 +71,7 @@ function Apartments() {
     } else {
       firebase.collection(APT_COLLECTION).add({
         admin: newAdminApartments,
-        cof: newCofApartments,
+        cof: parseFloat(newCofApartments),
         number: parseInt(newNumberApartments),
         password: newPasswordApartments,
         residential: newResidentialApartments,
