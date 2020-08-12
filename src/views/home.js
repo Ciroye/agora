@@ -6,7 +6,7 @@ import Assembly from "../components/assemblies";
 import Login from "../components/login";
 import { connect } from 'react-redux';
 import Residential from "../components/residential";
-
+import fb from '../firebase';
 
 const MarginTop = styled.div`
   margin-top: 5%;
@@ -32,6 +32,19 @@ class Home extends Component {
 
   onComplete = () => {
     this.setState({ logued: true })
+  }
+
+  componentDidMount() {
+    const data = [];
+    fb.collection('question').get().then((res) => {
+      for (const d of res.docs) {
+        data.push({
+          id: d.id,
+          ...d.data()
+        })
+      }
+      console.log(data);
+    })
   }
 
   render() {

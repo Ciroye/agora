@@ -33,9 +33,16 @@ class Jitsi extends Component {
     if (displayName != this.props.apartament.number) {
       if (!isNaN(parseInt(displayName))) {
         const assembly = this.props.assembly;
-        fb.collection(ASSEMBLY_COLLECTION).doc(assembly.id).collection(PARTICIPANTS_COLLECTION).add(
-          { apartament: displayName, jitsiid: id }
-        );
+        fb.collection(ASSEMBLY_COLLECTION).doc(assembly.id).collection(PARTICIPANTS_COLLECTION).where("apartament", "==", displayName).where("jitsiid", "==", id).get()
+          .then((res) => {
+            if (res.docs.length == 0) {
+              fb.collection(ASSEMBLY_COLLECTION).doc(assembly.id).collection(PARTICIPANTS_COLLECTION).add(
+                { apartament: displayName, jitsiid: id }
+              );
+            } else {
+              console.log("Ya está en la reu");
+            }
+          })
       }
     }
     this.updateParticipants();

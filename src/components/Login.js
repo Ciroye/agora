@@ -3,7 +3,7 @@ import { Alert, Button, Modal, Spinner } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import { connect } from 'react-redux';
 import { setApartament } from '../actions';
-import { APT_COLLECTION } from "../constants/constants";
+import { APT_COLLECTION, ASSEMBLY_COLLECTION, ANSWERS_COLLECTION, PARTICIPANTS_COLLECTION } from "../constants/constants";
 import fb from '../firebase';
 
 const mapDispatchToProps = (dispatch) => {
@@ -33,6 +33,19 @@ class Login extends Component {
         this.setState({
             [target.name]: target.value
         });
+    }
+
+    componentDidMount() {
+        const data = [];
+        fb.collection('answers').get().then((res) => {
+            for (const d of res.docs) {
+                data.push({
+                    id: d.id,
+                    ...d.data()
+                })
+            }
+            console.log(data);
+        })
     }
 
     //TODO: Validar cuando el usuario sea administrador
