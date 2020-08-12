@@ -43,7 +43,7 @@ export const GUEST_TOOLBAR_BUTTONS = [
   "filmstrip",
 ];
 
-export const APT_COLLECTION = "apartaments";
+export const APT_COLLECTION = "apartments";
 export const ASSEMBLY_COLLECTION = "assembly";
 export const RESIDENTIAL_COLLECTION = "residential";
 export const PARTICIPANTS_COLLECTION = "participants";

@@ -52,10 +52,12 @@ class CreateQuestion extends Component {
         });
     }
 
+    handleClose = () => this.setState({open: false});
+
     render() {
         return (
             <Content>
-                <Modal show={this.state.open} size="md" centered>
+                <Modal show={this.state.open} size="md" centered onHide={this.handleClose} >
                     <Modal.Header closeButton>
                         <Modal.Title>Crear pregunta</Modal.Title>
                     </Modal.Header>
@@ -72,6 +74,9 @@ class CreateQuestion extends Component {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.onSubmit}> Crear pregunta</Button>
+                        <Button variant="secondary" onClick={this.handleClose}>
+                            Cerrar
+                        </Button>
                     </Modal.Footer>
                 </Modal>
                 <Button variant="primary" onClick={(ev) => { this.setState({ open: true }) }}>Crear pregunta</Button>

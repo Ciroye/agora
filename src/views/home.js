@@ -3,7 +3,7 @@ import React, { Component, Fragment } from "react";
 import { Tab, Tabs } from "react-bootstrap";
 import Apartaments from "../components/apartments";
 import Assembly from "../components/assemblies";
-import Login from "../components/login";
+import Login from "../components/Login";
 import { connect } from 'react-redux';
 import Residential from "../components/residential";
 import fb from '../firebase';

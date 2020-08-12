@@ -69,8 +69,6 @@ class Login extends Component {
                         } else {
                             this.setState({ error: "Usted no puede unirse a esta conferencia." })
                         }
-
-
                     } else { // Ok
                         this.props.setApartament({ ...apartament, id: qs.docs[0].id });
                         this.props.onComplete();
