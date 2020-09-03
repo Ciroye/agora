@@ -44,7 +44,7 @@ class Login extends Component {
                     ...d.data()
                 })
             }
-            console.log(data);
+            // console.log(data);
         })
     }
 

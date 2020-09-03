@@ -7,6 +7,11 @@ import { ANSWERS_COLLECTION, QUESTION_COLLECTION } from "../constants/constants"
 import fb from "../firebase";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import ReactExport from "react-export-excel";
+
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const Content = styled.div({
     marginTop: 20,
@@ -31,6 +36,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const mapStateToProps = (state) => {
+    // console.log(state)
     return {
         ...state
     };
@@ -56,11 +62,18 @@ class Question extends Component {
                     ...m.data()
                 }
             })
+            // console.log(answers)
             this.setState({ answers })
         })
     }
 
     getResults() {
+        // if (this.state.answers) {
+        //     console.log(this.state.answers)
+        //     // console.log(this.props.data.title)
+        //     console.log(this.props.apartaments)
+        //     console.log("-----------------")
+        // }
         const yes = this.state.answers.filter((m) => m.approve).slice().map(m => m.apartment);
         const no = this.state.answers.filter((m) => !m.approve).slice().map(m => m.apartment);;
 
@@ -68,6 +81,7 @@ class Question extends Component {
 
         const yesApts = apartaments.filter(m => yes.includes(m.id));
         const noApts = apartaments.filter(m => no.includes(m.id));
+
 
         let auxY = 0, auxN = 0;
         for (const y of yesApts) {
@@ -118,6 +132,7 @@ class Question extends Component {
         return 0;
     }
 
+
     render() {
         const results = this.getResults();
         return <Content>
@@ -134,6 +149,13 @@ class Question extends Component {
                 <Button variant="primary" disabled={this.state.hasVote} onClick={this.vote.bind(this, true)}>Sí</Button>
                 <Button variant="secondary" disabled={this.state.hasVote} onClick={this.vote.bind(this, false)}>No</Button>
                 {this.props.apartament.admin && <Button variant="danger" onClick={this.delete}><FontAwesomeIcon icon={faTrash} className="pointer" /></Button>}
+                {this.props.apartament.admin && <ExcelFile element={<Button variant="success">Exportar</Button>} filename={this.props.data.title}>
+                    <ExcelSheet data={this.state.answers} name={this.props.data.title}>
+                        <ExcelColumn label="Apartamento" value="apartment" />
+                        <ExcelColumn label="Respuesta" value="approve" />
+                        <ExcelColumn label="Pregunta" value="question" />
+                    </ExcelSheet>
+                </ExcelFile>}
             </ButtonGroup>
         </Content>
     }

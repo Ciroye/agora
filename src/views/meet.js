@@ -7,10 +7,15 @@ import CreateQuestion from '../components/create-question';
 import Login from '../components/Login';
 import Question from '../components/Question';
 import Statistics from '../components/statistics';
-import { ASSEMBLY_COLLECTION, QUESTION_COLLECTION } from "../constants/constants";
+import { ASSEMBLY_COLLECTION, QUESTION_COLLECTION, ANSWERS_COLLECTION } from "../constants/constants";
 import fb from "../firebase";
 import { getResidential } from '../utils/fb';
+import ReactExport from "react-export-excel";
+import { Button } from 'react-bootstrap';
 
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const mapStateToProps = (state) => {
   return {
@@ -73,7 +78,6 @@ class Meet extends Component {
     })
   }
 
-
   componentDidMount() {
     this.validateAssembly();
   }
@@ -98,6 +102,7 @@ class Meet extends Component {
             <Col lg="4" style={{ maxHeight: "100vh" }}>
               <Statistics />
               {this.props.apartament.admin && <CreateQuestion />}
+              <hr />
               {questions.map((v, i) => <Question data={v} key={i} />)}
             </Col>
           </Row>
