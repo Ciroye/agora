@@ -1,0 +1,39 @@
+Tecnicas:
+    ☐ No tenemos db - Crear db nuevamente
+
+Admin:
+    ☐ Filtros en lista de aptos
+    ☐ Deberías cambiar ese bootstrap por algún template modificado
+    ☐ Agregar opciṕon de poderes a los apartamentos - multiselect
+    ☐ Importar apartamentos ?
+    ☐ Validar todos los tipos de datos
+    ☐ No coeficientes en cero
+
+    Descargar resultados de las asambleas:
+        ☐ Detalle de cada pregunta
+        ☐ Quorum - quienes asistieron y cuales no
+
+Encuestas:
+    ☐ Mostar nombre de la asamblea
+    ☐ Mostar el % de quorum
+    ☐ Mostrar número de participantes unidos
+    ☐ Válidar que solo se pueda acceder una vez por apartamento
+    ☐ Resultado de la encuesta en forma de pie
+    
+    Inicar asamblea :
+        ☐ Botón que guarda quorum
+
+    Crear pregunta:
+        ☐ Crear
+        ☐ Eliminar si no han respondido
+        ☐ Solo puede crear el admin
+        ☐ Time out para contestar o bien cerrar la votación
+        
+        Votación:
+            ☐ Votar Sí
+            ☐ Votar No
+            ☐ Se deben sumar los votos a todos lo que cedieron el poder
+            ☐ Si el usuario cedió el poder, queda inhabilitado para votar
+            ☐ Mostar mensaje de inhabilitado para votar porque se cedió el poder
+
+    
