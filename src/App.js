@@ -1,20 +1,29 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./views/home";
 import Meet from "./views/meet";
 import './app.css'
+import { removeSession } from './utils/fb'
 
 export default class App extends Component {
 
-  onUnload = e => { // the method that will be used for both add and remove event
+  onBeforeUnload = e => { // the method that will be used for both add and remove event
     e.preventDefault();
     e.returnValue = '';
     return false;
   }
-  
+
+  onUnload = e => { // the method that will be used for both add and remove event
+    const apartment = window.sessionStorage.getItem("apartment")
+    const assembly = window.sessionStorage.getItem("assembly")
+    removeSession(apartment, assembly)
+    return false;
+  }
+
   componentDidMount() {
-    window.addEventListener("beforeunload", this.onUnload);
+    const apartment = window.sessionStorage.getItem("apartment")
+    const assembly = window.sessionStorage.getItem("assembly")
+    removeSession(apartment, assembly)
   }
 
   render() {

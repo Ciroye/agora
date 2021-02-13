@@ -5,12 +5,12 @@ const reducer = (state, action) => {
     case actionTypes.APARTAMENT_CHANGE:
       return {
         ...state,
-        apartament: action.apartament,
+        apartment: action.apartment,
       };
     case actionTypes.RESIDENTIAL_CHANGE:
-      return {
+      return {  
         ...state,
-        residential: action.residential,
+        building: action.building,
       };
     case actionTypes.ASSEMBLY_CHANGE:
       return {

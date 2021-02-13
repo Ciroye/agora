@@ -1,14 +1,47 @@
 import fb from '../firebase';
-import { RESIDENTIAL_COLLECTION, ASSEMBLY_COLLECTION, PARTICIPANTS_COLLECTION, APT_COLLECTION } from '../constants/constants'
+import { BUILDING_COLLECTION, ASSEMBLY_COLLECTION, PARTICIPANTS_COLLECTION, APT_COLLECTION, ACTIVE_SESSIONS } from '../constants/constants'
 
-export const getResidential = async (id) => {
+export const getBuilding = async (id) => {
     if (id) {
-        const doc = await fb.collection(RESIDENTIAL_COLLECTION).doc(id).get();
+        const doc = await fb.collection(BUILDING_COLLECTION).doc(id).get();
         if (doc.exists) {
             return { ...doc.data(), id }
         }
     }
     return null;
+}
+
+
+export const setSession = (apartament, assembly) => {
+    fb.collection(ACTIVE_SESSIONS).add({
+        apartment: apartament.id,
+        assembly: assembly.id,
+        last_update: new Date()
+    })
+}
+
+export const updateSession = (apartment, assembly) => {
+    console.log("Update");
+    fb.collection(ACTIVE_SESSIONS).where("apartment", "==", apartment.id).where("assembly", "==", assembly.id).get()
+        .then(res => {
+            res.docs.forEach(v => {
+                console.log(v.id);
+                fb.collection(ACTIVE_SESSIONS).doc(v.id).set({
+                    apartment: apartment.id,
+                    assembly: assembly.id,
+                    last_update: new Date()
+                });
+            })
+        })
+}
+
+export const removeSession = (apartment, assembly) => {
+    fb.collection(ACTIVE_SESSIONS).where("apartment", "==", apartment).where("assembly", "==", assembly).get()
+        .then(res => {
+            res.docs.forEach(v => {
+                fb.collection(ACTIVE_SESSIONS).doc(v.id).delete();
+            })
+        })
 }
 
 export const deleteParticipant = (assemblyid, id) => {
@@ -55,7 +88,7 @@ export const getApartaments = async (residentialid) => {
 export const getApartamentsById = async (apartmentId) => {
     const doc = await (await fb.collection(APT_COLLECTION).doc(apartmentId).get()).data();
     return {
-        id:apartmentId,
+        id: apartmentId,
         ...doc
     }
 }

@@ -1,16 +1,16 @@
 import * as actionTypes from './constants/action-types';
 
-export const setApartament = (apartament) => {
+export const setApartament = (apartment) => {
     return {
         type: actionTypes.APARTAMENT_CHANGE,
-        apartament
+        apartment
     }
 }
 
-export const setResidential = (residential) => {
+export const setBuilding = (building) => {
     return {
         type: actionTypes.RESIDENTIAL_CHANGE,
-        residential
+        building
     }
 }
 

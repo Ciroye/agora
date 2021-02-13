@@ -1,21 +1,13 @@
-import React, { Component, Fragment } from "react";
-import { Col, Container, Modal, Row } from 'react-bootstrap';
+import React, { Component } from "react";
+import { Card } from "react-bootstrap";
 import { connect } from 'react-redux';
-import { setAssembly, setResidential } from '../actions';
-import CreateQuestion from '../components/create-question';
-// import Jitsi from '../components/jitsi';
-import Login from '../components/Login';
-import Question from '../components/Question';
-import Statistics from '../components/statistics';
-import { ASSEMBLY_COLLECTION, QUESTION_COLLECTION, ANSWERS_COLLECTION } from "../constants/constants";
-import fb from "../firebase";
-import { getResidential } from '../utils/fb';
-import ReactExport from "react-export-excel";
-import { Button } from 'react-bootstrap';
+import { setAssembly, setBuilding } from '../actions';
+import Login from '../components/login';
+import Questions from '../components/questions';
+import { ACTIVE_SESSIONS, ASSEMBLY_COLLECTION } from '../constants/constants';
+import fb from '../firebase'
+import { getBuilding, setSession, updateSession } from '../utils/fb'
 
-const ExcelFile = ReactExport.ExcelFile;
-const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const mapStateToProps = (state) => {
   return {
@@ -25,8 +17,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setResidential(residential) {
-      dispatch(setResidential(residential))
+    setBuilding(building) {
+      dispatch(setBuilding(building))
     },
     setAssembly(assembly) {
       dispatch(setAssembly(assembly))
@@ -35,11 +27,50 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class Meet extends Component {
+
   state = {
-    validAssembly: true,
     logued: false,
-    questions: []
-  };
+    validAssembly: true,
+    activeUsers: 0
+  }
+
+  diff_minutes = (dt2, dt1) => {
+    var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+    diff /= 60;
+    return Math.abs(Math.round(diff));
+  }
+
+
+  onLoginComplete = () => {
+    this.setState({ logued: true })
+    setSession(this.props.apartment, this.props.assembly)
+    setInterval(() => {
+      updateSession(this.props.apartment, this.props.assembly)
+    }, 10000)
+
+    fb.collection(ACTIVE_SESSIONS).where("assembly", "==", this.props.assembly.id).onSnapshot((qs) => {
+      this.setActiveSessions(qs);
+    })
+  }
+
+
+
+  setActiveSessions(qs) {
+    const sessions = [];
+    qs.docs.forEach(d => {
+      const session = d.data();
+      if (this.diff_minutes(new Date(session.last_update.seconds * 1000), new Date()) < 2) {
+        if (!sessions.some(m => m.apartment === session.apartment)) {
+          sessions.push(session);
+        }
+      }
+    });
+    this.setState({ activeUsers: sessions.length });
+  }
+
+  getId() {
+    return new URLSearchParams(this.props.location.search).get("id");
+  }
 
   validateAssembly() {
     fb.collection(ASSEMBLY_COLLECTION)
@@ -51,8 +82,9 @@ class Meet extends Component {
         } else {
           const assembly = qs.docs[0].data();
           this.props.setAssembly({ ...assembly, id: qs.docs[0].id });
-          getResidential(assembly.residential).then(doc => {
-            this.props.setResidential(doc);
+          window.sessionStorage.setItem("assembly", qs.docs[0].id)
+          getBuilding(assembly.building).then(doc => {
+            this.props.setBuilding(doc);
           })
         }
       })
@@ -61,55 +93,35 @@ class Meet extends Component {
       });
   }
 
-  getId() {
-    return new URLSearchParams(this.props.location.search).get("id");
-  }
-
-  onComplete = () => {
-    this.setState({ logued: true })
-    fb.collection(QUESTION_COLLECTION).where("assembly", "==", this.props.assembly.id).onSnapshot((snap) => {
-      const questions = snap.docs.map((m) => {
-        return {
-          id: m.id,
-          ...m.data()
-        }
-      });
-      this.setState({ questions })
-    })
-  }
-
   componentDidMount() {
     this.validateAssembly();
   }
 
   render() {
-    const { validAssembly, logued, questions } = this.state;
-    return <Fragment>
-      <Modal centered show={!validAssembly} onHide={() => { }}>
-        <Modal.Header>
-          <Modal.Title>Error al unirse a la sesión</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>La sesión a la que está intentando acceder ya no está activa o no existe.</Modal.Body>
-      </Modal>
-      <Login show={validAssembly && !logued} onComplete={this.onComplete} />
-      {
-        (validAssembly && logued) &&
-        <Container fluid>
-          <Row>
-            <Col lg="4" style={{ height: "100vh", paddingLeft: 0 }}>
-              {/* <Jitsi></Jitsi> */}
-            </Col>
-            <Col lg="4" style={{ maxHeight: "100vh" }}>
-              <Statistics />
-              {this.props.apartament.admin && <CreateQuestion />}
-              <hr />
-              {questions.map((v, i) => <Question data={v} key={i} />)}
-            </Col>
-          </Row>
-        </Container>
-      }
-    </Fragment>
+    const { logued, activeUsers } = this.state;
+    return (
+      <>
+        {!logued && <Login onComplete={this.onLoginComplete} />}
+        {logued && <>
+          <Card className="shadow-sm mb-5 bg-white rounded" style={{ maxWidth: "15%", position: "absolute", top: 0, left: 0, zIndex: 100 }}>
+            <Card.Body>
+              <h4>Participantes: <strong>{activeUsers}/{this.props.building.quantity}</strong></h4>
+              <h4>Quorum: <strong>50%</strong></h4>
+            </Card.Body>
+          </Card>
+          <div className="container-fluid">
+            <div className="row">
+              <div className="col"> <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quaerat magni explicabo molestias fuga in nihil et, magnam dignissimos praesentium adipisci. Facilis distinctio cupiditate dignissimos minus veniam voluptate quos odit neque.</p> </div>
+              <div className="col-4">
+                <Questions />
+              </div>
+            </div>
+          </div>
+        </>}
+      </>
+    );
   }
 }
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(Meet)
