@@ -6,6 +6,7 @@ import Contact from '../pages/Contact'
 
 
 
+
 export default function NavBar() {
     return (
         <div>

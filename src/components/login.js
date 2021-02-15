@@ -82,7 +82,7 @@ class Login extends Component {
                         <form autoComplete="false" className="col-4 offset-4">
                             <div className="text-center">
                                 <img className="mb-4 text-center " src={icon3} alt="" width="80" height="80" />
-                                <h1 className="h6 mb-3 fw-normal"> Incia sesión para ingresar a la asamblea</h1>
+                                <h1 className="h6 mb-3 fw-normal"> Iniciar sesión para ingresar a la asamblea</h1>
                             </div>
                             {error && <div className="alert alert-danger" role="alert">
                                 {error}
@@ -93,7 +93,7 @@ class Login extends Component {
                             <label className="visually-hidden"> Contraseña </label>
                             <input onChange={this.handleInputChange} type="password" name="password" className="form-control" placeholder="Contraseña" required />
                             <br />
-                            {!loading && <button className="w-100 btn btn-lg btn-primary" type="button" onClick={this.login.bind(this)}>Inciar sesion</button>}
+                            {!loading && <button className="w-100 btn btn-lg btn-primary" type="button" onClick={this.login.bind(this)}>Iniciar sesión</button>}
                             {loading && <div className="text-center">
                                 <div className="spinner-border" role="status">
                                     <span className="sr-only">Loading...</span>

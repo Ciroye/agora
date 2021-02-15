@@ -57,13 +57,13 @@ export const deleteApartament = (assemblyid, apartament) => {
         });
 }
 
-export const getCof = async (residentialid, apartaments) => {
+export const getCof = async (buildingid, apartaments) => {
     if (apartaments.length <= 10) {
-        const data = await fb.collection(APT_COLLECTION).where("residential", "==", residentialid).where("number", "in", apartaments).get();
+        const data = await fb.collection(APT_COLLECTION).where("building", "==", buildingid).where("number", "in", apartaments).get();
         return data.docs.map((m) => m.data().cof);
     }
 
-    const data = await fb.collection(APT_COLLECTION).where("residential", "==", residentialid).get();
+    const data = await fb.collection(APT_COLLECTION).where("building", "==", buildingid).get();
     const apts = data.docs.map((m) => {
         return {
             id: m.id,
@@ -75,8 +75,8 @@ export const getCof = async (residentialid, apartaments) => {
 
 }
 
-export const getApartaments = async (residentialid) => {
-    const data = await fb.collection(APT_COLLECTION).where("residential", "==", residentialid).get();
+export const getApartaments = async (buildingid) => {
+    const data = await fb.collection(APT_COLLECTION).where("building", "==", buildingid).get();
     return data.docs.map((m) => {
         return {
             id: m.id,
