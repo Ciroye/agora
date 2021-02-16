@@ -25,7 +25,7 @@ class Question extends Component {
     componentDidMount() {
         fb.collection(ANSWERS_COLLECTION).where("apartment", "==", this.props.apartment.id).where("question", "==", this.props.data.id).onSnapshot((qs) => {
             if (qs.docs.length > 0) {
-                console.log(this.props.data.id + " : Tiene votos");
+                console.log(this.props.data.id +" : "+ this.props.data.title+ " : Tiene votos");
                 this.setState({ hasVote: true })
             }
         })
@@ -72,16 +72,16 @@ class Question extends Component {
             approve: decision,
             question: this.props.data.id
         })
-        console.log(this.props.data.title + " : Votando ? wtf?");
+        console.log(this.props.data.id +" : "+ this.props.data.title+ " : Voto?");
         this.setState({ hasVote: true })
     }
 
     render() {
-        return <Card className="shadow-sm mb-2 rounded">
+        return <Card className="shadow-sm mb-2 rounded" key={this.props.key}>
             <Card.Body>
                 <p>{this.props.data.title}</p>
                 <div className="text-center">
-                    <Button style={{ width: "40%" }} disabled={this.state.hasVote} onClick={ ()=> {this.vote(true)} } variant="primary" size="sm" >Sí</Button><Button disabled={this.state.hasVote} onClick={()=> {this.vote(false)} } className="ml-2" style={{ width: "40%" }} variant="danger" size="sm">No</Button>
+                    <Button style={{ width: "40%" }} disabled={this.state.hasVote} onClick={() => { this.vote(true) }} variant="primary" size="sm" >Sí</Button><Button disabled={this.state.hasVote} onClick={() => { this.vote(false) }} className="ml-2" style={{ width: "40%" }} variant="danger" size="sm">No</Button>
                 </div>
             </Card.Body>
         </Card>

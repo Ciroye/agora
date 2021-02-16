@@ -63,7 +63,8 @@ class Meet extends Component {
       this.setActiveSessions(qs);
     })
 
-    fb.collection(QUESTION_COLLECTION).where("assembly", "==", this.props.assembly.id).onSnapshot((qs) => {
+    fb.collection(QUESTION_COLLECTION).orderBy("date", "desc").where("assembly", "==", this.props.assembly.id).onSnapshot((qs) => {
+      this.setState({ questions: [] })
       const questions = qs.docs.map((m) => {
         return { id: m.id, ...m.data() }
       });
