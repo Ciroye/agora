@@ -34,7 +34,8 @@ class Meet extends Component {
     activeUsers: 0,
     questions: [],
     creating: false,
-    question: ""
+    question: "",
+    quorum: 0
   }
 
   diff_minutes = (dt2, dt1) => {
@@ -51,14 +52,14 @@ class Meet extends Component {
   }
 
 
-  onLoginComplete = () => {
+  onLoginComplete = async () => {
     this.setState({ logued: true })
     setSession(this.props.apartment, this.props.assembly)
     setInterval(() => {
       updateSession(this.props.apartment, this.props.assembly)
     }, 10000)
 
-    fb.collection(ACTIVE_SESSIONS).where("assembly", "==", this.props.assembly.id).onSnapshot((qs) => {
+    fb.collection(ACTIVE_SESSIONS).where("assembly", "==", this.props.assembly.id).onSnapshot(async (qs) => {
       this.setActiveSessions(qs);
     })
 
@@ -70,7 +71,7 @@ class Meet extends Component {
     })
   }
 
-  setActiveSessions(qs) {
+  async setActiveSessions(qs) {
     const sessions = [];
     qs.docs.forEach(d => {
       const session = d.data();
@@ -80,7 +81,15 @@ class Meet extends Component {
         }
       }
     });
-    this.setState({ activeUsers: sessions.length });
+    const coef = []
+    for (const s of sessions) {
+      if (s.apartment_ref) {
+        const apt = await s.apartment_ref.get()
+        coef.push(apt.data().coef)
+      }
+    }
+    const quorum = coef.length > 0 ? coef.reduce((p, c) => p + c) : 0
+    this.setState({ activeUsers: sessions.length, quorum });
   }
 
   getId() {
@@ -123,7 +132,7 @@ class Meet extends Component {
 
 
   render() {
-    const { logued, activeUsers, questions, creating } = this.state;
+    const { logued, activeUsers, questions, creating, quorum } = this.state;
     return (
       <>
         {!logued && <Login onComplete={this.onLoginComplete} />}
@@ -131,7 +140,7 @@ class Meet extends Component {
           <Card className="shadow-sm mb-5 bg-white rounded" style={{ wdth: "15%", position: "absolute", top: 0, left: 0, zIndex: 100 }}>
             <Card.Body>
               <h6>Participantes: <strong>{activeUsers}/{this.props.building.total}</strong></h6>
-              <h6>Quorum: <strong>50%</strong></h6>
+              <h6>Quorum: <strong>{quorum}%</strong></h6>
             </Card.Body>
           </Card>
           <div className="container-fluid">
