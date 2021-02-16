@@ -22,10 +22,7 @@ class Question extends Component {
     };
 
 
-
     componentDidMount() {
-
-        console.log(this.props.data.id);
         fb.collection(ANSWERS_COLLECTION).where("apartment", "==", this.props.apartment.id).where("question", "==", this.props.data.id).onSnapshot((qs) => {
             if (qs.docs.length > 0) {
                 console.log(this.props.data.id + " : Tiene votos");

@@ -68,9 +68,8 @@ function Assemblys() {
       setShowError(true);
     } else {
       firebase.collection(ASSEMBLY_COLLECTION).add({
-   
         date: newDateAssemblys,
-        name: parseInt(newNameAssemblys),
+        name: newNameAssemblys,
         url: newUrlAssemblys,
         building: newBuildingAssemblys,
       });
@@ -78,6 +77,21 @@ function Assemblys() {
       setShowError(false);
     }
   };
+
+  function generateP() { 
+    var pass = ''; 
+    var str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +  
+            'abcdefghijklmnopqrstuvwxyz0123456789'; 
+      
+    for (var i = 1; i <= 8; i++) { 
+        var char = Math.floor(Math.random() 
+                    * str.length + 1); 
+          
+        pass += str.charAt(char) 
+    } 
+      
+    return pass; 
+}
 
   async function onDelete(id) {
     const files = await firebase
@@ -96,7 +110,9 @@ function Assemblys() {
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    setnewUrlAssemblys(generateP())
+    setShow(true)};
 
   const [showError, setShowError] = useState(false);
 
@@ -161,6 +177,7 @@ function Assemblys() {
                 <Form.Label>Url</Form.Label>
                 <Input
                   type="text"
+                  value={newUrlAssemblys}
                   className="form-control"
                   placeholder="Link de conexión a la reunión"
                   onChange={(e) =>

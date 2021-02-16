@@ -22,9 +22,9 @@ function Apartments() {
   const [apartments, setApartments] = useState([]);
   const [Building, setBuilding] = useState([]);
   const [newAdminApartments, setnewAdminApartments] = useState(false);
-  const [newCofApartments, setnewCofApartments] = useState([]);
+  const [newCofApartments, setnewCofApartments] = useState(0);
   const [newNumberApartments, setnewNumberApartments] = useState("");
-  const [newPasswordApartments, setnewPasswordApartments] = useState([]);
+  const [newPasswordApartments, setnewPasswordApartments] = useState("");
   const [newBuildingApartments, setnewBuildingApartments] = useState("");
 
 
@@ -37,12 +37,13 @@ function Apartments() {
             id: c.id,
             ...c.data(),
           }
-          const resi = await getBuilding(apt.building);
-          if (resi) {
-            apt.buildingname = resi.name;
+          if(apt.building_reference){
+            const building = await apt.building_reference.get()
+            apt.buildingname = building.data().name
           }
           apts.push(apt);
         }
+        
         setApartments(apts);
       });
     };
@@ -69,10 +70,11 @@ function Apartments() {
     } else {
       firebase.collection(APT_COLLECTION).add({
         admin: newAdminApartments,
-        coef: newCofApartments,
-        name: parseInt(newNumberApartments),
+        coef: parseFloat(newCofApartments),
+        name: newNumberApartments,
         password: newPasswordApartments,
         building: newBuildingApartments,
+        building_reference: firebase.doc(BUILDING_COLLECTION+ "/"+ newBuildingApartments)
       });
       setShow(false);
       setShowError(false);
@@ -94,9 +96,26 @@ function Apartments() {
     }
   }
 
+  function generateP() { 
+    var pass = ''; 
+    var str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +  
+            'abcdefghijklmnopqrstuvwxyz0123456789'; 
+      
+    for (var i = 1; i <= 8; i++) { 
+        var char = Math.floor(Math.random() 
+                    * str.length + 1); 
+          
+        pass += str.charAt(char) 
+    } 
+      
+    return pass; 
+  }
+
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    setnewPasswordApartments(generateP())
+    setShow(true)};
 
   const [showError, setShowError] = useState(false);
 
@@ -123,7 +142,7 @@ function Apartments() {
               <Form.Group controlId="formBasicEmail">
                 <Form.Label>Apt</Form.Label>
                 <Input
-                  type="number"
+                  type="text"
                   className="form-control"
                   placeholder="Numero del apartamento"
                   defaultChecked={false}
@@ -145,6 +164,7 @@ function Apartments() {
                 <Form.Label>Contraseña</Form.Label>
                 <Input
                   type="text"
+                  value={newPasswordApartments}
                   className="form-control"
                   onChange={(e) =>
                     setnewPasswordApartments(e.currentTarget.value)
