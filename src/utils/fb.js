@@ -13,19 +13,25 @@ export const getBuilding = async (id) => {
 
 
 export const setSession = (apartament, assembly) => {
-    fb.collection(ACTIVE_SESSIONS).add({
-        apartment: apartament.id,
-        assembly: assembly.id,
-        last_update: new Date()
-    })
-}
-
-export const updateSession = (apartment, assembly) => {
-    console.log("Update");
-    fb.collection(ACTIVE_SESSIONS).where("apartment", "==", apartment.id).where("assembly", "==", assembly.id).get()
+    fb.collection(ACTIVE_SESSIONS).where("apartment", "==", apartament.id).where("assembly", "==", assembly.id).get()
         .then(res => {
             res.docs.forEach(v => {
                 console.log(v.id);
+                fb.collection(ACTIVE_SESSIONS).doc(v.id).delete();
+            })
+            fb.collection(ACTIVE_SESSIONS).add({
+                apartment: apartament.id,
+                assembly: assembly.id,
+                last_update: new Date()
+            })
+        })
+
+}
+
+export const updateSession = (apartment, assembly) => {
+    fb.collection(ACTIVE_SESSIONS).where("apartment", "==", apartment.id).where("assembly", "==", assembly.id).get()
+        .then(res => {
+            res.docs.forEach(v => {
                 fb.collection(ACTIVE_SESSIONS).doc(v.id).set({
                     apartment: apartment.id,
                     assembly: assembly.id,
@@ -39,6 +45,7 @@ export const removeSession = (apartment, assembly) => {
     fb.collection(ACTIVE_SESSIONS).where("apartment", "==", apartment).where("assembly", "==", assembly).get()
         .then(res => {
             res.docs.forEach(v => {
+                console.log(v.id);
                 fb.collection(ACTIVE_SESSIONS).doc(v.id).delete();
             })
         })

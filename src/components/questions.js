@@ -1,33 +1,94 @@
 import React, { Component } from 'react';
 import { Navbar, Button, Card } from "react-bootstrap";
+import { connect } from 'react-redux';
+import fb from "../firebase";
+import { ANSWERS_COLLECTION } from '../constants/constants';
 
-export default class Questions extends Component {
-    render() {
-        return <div style={{ maxHeight: "100vh", height: "100vh", overflow: "hidden", overflowY: "scroll", padding: "10px" }} className="shadow-sm rounded">
-            <Card className="shadow-sm mb-2 rounded">
-                <Card.Body >
-                    <div className="text-center">
-                        <Button style={{ width: "100%" }} variant="primary" size="sm">Crear preguntas</Button>
-                    </div>
-                </Card.Body>
-            </Card>
-            <Card className="shadow-sm mb-2 rounded">
-                <Card.Title style={{ marginBottom: 0 }}><i className="fas fa-times float-right p-2"></i></Card.Title>
-                <Card.Body style={{ padding: "0px 1.25rem 1.25rem 1.25rem" }}>
-                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eos fugiat, libero dolores numquam illo veniam nemo nostrum sunt, voluptatem, molestias a excepturi modi. Accusantium repudiandae ipsam dolore facilis inventore quis?</p>
-                    <div className="text-center">
-                        <Button style={{ width: "40%" }} variant="primary" size="sm">Sí</Button><Button className="ml-2" style={{ width: "40%" }} variant="danger" size="sm">No</Button>
-                    </div>
-                </Card.Body>
-            </Card>
-            <Card className="shadow-sm mb-2 rounded">
-                <Card.Body>
-                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eos fugiat, libero dolores numquam illo veniam nemo nostrum sunt, voluptatem, molestias a excepturi modi. Accusantium repudiandae ipsam dolore facilis inventore quis?</p>
-                    <div className="text-center">
-                        <Button style={{ width: "40%" }} variant="primary" size="sm" disabled={true}>50%</Button><Button className="ml-2" style={{ width: "40%" }} disabled={true} variant="danger" size="sm">50%</Button>
-                    </div>
-                </Card.Body>
-            </Card>
-        </div>;
+const mapDispatchToProps = (dispatch) => {
+    return {
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        ...state
+    };
+};
+class Question extends Component {
+
+    state = {
+        hasVote: false,
+        answers: []
+    };
+
+
+
+    componentDidMount() {
+
+        console.log(this.props.data.id);
+        fb.collection(ANSWERS_COLLECTION).where("apartment", "==", this.props.apartment.id).where("question", "==", this.props.data.id).onSnapshot((qs) => {
+            if (qs.docs.length > 0) {
+                console.log(this.props.data.id + " : Tiene votos");
+                this.setState({ hasVote: true })
+            }
+        })
+
+        fb.collection(ANSWERS_COLLECTION).where("question", "==", this.props.data.id).onSnapshot((snap) => {
+            const answers = snap.docs.map((m) => {
+                return {
+                    id: m.id,
+                    ...m.data()
+                }
+            })
+            this.setState({ answers })
+        })
+    }
+
+
+    getResults() {
+        // const yes = this.state.answers.filter((m) => m.approve).slice().map(m => m.apartment);
+        // const no = this.state.answers.filter((m) => !m.approve).slice().map(m => m.apartment);;
+
+        // const apartaments = this.props.apartaments;
+
+        // const yesApts = apartaments.filter(m => yes.includes(m.id));
+        // const noApts = apartaments.filter(m => no.includes(m.id));
+
+
+        // let auxY = 0, auxN = 0;
+        // for (const y of yesApts) {
+        //     auxY += parseFloat(y.cof);
+        // }
+        // for (const n of noApts) {
+        //     auxN += parseFloat(n.cof);
+        // }
+
+        // return {
+        //     yes: auxY,
+        //     no: auxN
+        // }
+    }
+
+    vote = (decision) => {
+        fb.collection(ANSWERS_COLLECTION).add({
+            apartment: this.props.apartment.id,
+            approve: decision,
+            question: this.props.data.id
+        })
+        console.log(this.props.data.title + " : Votando ? wtf?");
+        this.setState({ hasVote: true })
+    }
+
+    render() {
+        return <Card className="shadow-sm mb-2 rounded">
+            <Card.Body>
+                <p>{this.props.data.title}</p>
+                <div className="text-center">
+                    <Button style={{ width: "40%" }} disabled={this.state.hasVote} onClick={ ()=> {this.vote(true)} } variant="primary" size="sm" >Sí</Button><Button disabled={this.state.hasVote} onClick={()=> {this.vote(false)} } className="ml-2" style={{ width: "40%" }} variant="danger" size="sm">No</Button>
+                </div>
+            </Card.Body>
+        </Card>
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Question)

@@ -56,7 +56,6 @@ class Login extends Component {
                                 this.setState({ error: "Usted no puede unirse a esta conferencia.", loading: false })
                             } else { // Ok
                                 this.props.setApartament({ ...apartament, id: res.docs[0].id });
-                                window.sessionStorage.setItem("apartment", res.docs[0].id)
                                 this.props.onComplete();
                             }
                         } else {
@@ -88,10 +87,10 @@ class Login extends Component {
                                 {error}
                             </div>}
                             <label className="visually-hidden text-left"> Usuario </label>
-                            <input onChange={this.handleInputChange} type="text" name="name" className="form-control" placeholder="Usuario" required autoFocus />
+                            <input autoComplete="false" onChange={this.handleInputChange} type="text" name="name" className="form-control" placeholder="Usuario" required autoFocus />
                             <br />
                             <label className="visually-hidden"> Contraseña </label>
-                            <input onChange={this.handleInputChange} type="password" name="password" className="form-control" placeholder="Contraseña" required />
+                            <input autoComplete="false" onChange={this.handleInputChange} type="password" name="password" className="form-control" placeholder="Contraseña" required />
                             <br />
                             {!loading && <button className="w-100 btn btn-lg btn-primary" type="button" onClick={this.login.bind(this)}>Inciar sesion</button>}
                             {loading && <div className="text-center">
