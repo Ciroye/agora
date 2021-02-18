@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { setAssembly, setBuilding } from '../actions';
 import Login from '../components/login';
 import Question from '../components/questions';
+import Chart from '../components/chart';
 import { ACTIVE_SESSIONS, ASSEMBLY_COLLECTION, QUESTION_COLLECTION } from '../constants/constants';
 import fb from '../firebase'
 import { getBuilding, setSession, updateSession } from '../utils/fb'
@@ -146,10 +147,10 @@ class Meet extends Component {
           </Card>
           <div className="container-fluid">
             <div className="row">
-              <div className="col"> <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quaerat magni explicabo molestias fuga in nihil et, magnam dignissimos praesentium adipisci. Facilis distinctio cupiditate dignissimos minus veniam voluptate quos odit neque.</p> </div>
+              <div className="col-8"> <Chart /></div>
               <div className="col-4">
                 <div style={{ maxHeight: "100vh", height: "100vh", overflow: "hidden", overflowY: "scroll", padding: "10px" }} className="shadow-sm rounded">
-                  <Card className="shadow-sm mb-2 rounded">
+                  {this.props.apartment.admin && <Card className="shadow-sm mb-2 rounded">
                     <Card.Body >
                       <div className="text-center">
                         {creating && <>
@@ -159,7 +160,7 @@ class Meet extends Component {
                         {!creating && <Button style={{ width: "100%" }} onClick={() => { this.setState({ creating: true }) }} variant="primary" size="sm">Crear preguntas</Button>}
                       </div>
                     </Card.Body>
-                  </Card>
+                  </Card>}
                   {questions.map((q, i) => <Question data={q} key={i} />)}
                 </div>
               </div>

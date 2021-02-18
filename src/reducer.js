@@ -32,6 +32,11 @@ const reducer = (state, action) => {
         ...state,
         apartaments: action.apartaments,
       };
+    case actionTypes.SET_QUESTION:
+        return {
+          ...state,
+          question: action.question,
+        };
     default:
       return { ...state };
   }

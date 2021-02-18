@@ -41,3 +41,10 @@ export const setApartaments = (apartaments) => {
         apartaments
     }
 }
+
+export const setQuestion = (question) => {
+    return {
+        type: actionTypes.SET_QUESTION,
+        question
+    }
+}

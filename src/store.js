@@ -5,4 +5,5 @@ export default createStore(reducer, {
   apartment: null,
   building: null,
   assembly: null,
+  question: null
 });
