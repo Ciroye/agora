@@ -3,9 +3,9 @@ import { Table, Button, Modal, Form, Container, Row, Col, Alert } from "react-bo
 import firebase from "../firebase";
 import styled from "@emotion/styled";
 import { APT_COLLECTION, BUILDING_COLLECTION } from "../constants/constants";
-import { getBuilding } from '../utils/fb'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
+/* import { getBuilding } from '../utils/fb'; */
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 
 const Input = styled.input`
@@ -26,7 +26,10 @@ function Apartments() {
   const [newNumberApartments, setnewNumberApartments] = useState("");
   const [newPasswordApartments, setnewPasswordApartments] = useState("");
   const [newBuildingApartments, setnewBuildingApartments] = useState("");
-
+  const [show, setShow] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const handleClose = () => setShow(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,13 +40,13 @@ function Apartments() {
             id: c.id,
             ...c.data(),
           }
-          if(apt.building_reference){
+          if (apt.building_reference) {
             const building = await apt.building_reference.get()
             apt.buildingname = building.data().name
           }
           apts.push(apt);
         }
-        
+
         setApartments(apts);
       });
     };
@@ -74,50 +77,52 @@ function Apartments() {
         name: newNumberApartments,
         password: newPasswordApartments,
         building: newBuildingApartments,
-        building_reference: firebase.doc(BUILDING_COLLECTION+ "/"+ newBuildingApartments)
+        building_reference: firebase.doc(BUILDING_COLLECTION + "/" + newBuildingApartments)
       });
       setShow(false);
       setShowError(false);
     }
   };
 
-  async function onDelete(id) {
-    const files = await firebase
-      .collection("answers")
-      .where("apartment", "==", id)
-      .get();
 
-    if (files.docs.length === 0) {
-      firebase.collection(APT_COLLECTION).doc(id).delete();
+  async function onDelete(apartment) {
+    const files = await firebase
+
+      .collection("answers")
+      .where("apartment", "==", apartment.id)
+      .get();
+      setError("")
+    if (files.docs.length > 0) {
+      setError("Este apartamento no se puede elimminar por que ya ha participado de asambleas")
+      
     } else {
-      window.alert(
-        "No se puede borrar esta apartamento por que ya participo de asambleas"
-      );
+      if (window.confirm(`Está seguro de eliminar el registro ${apartment.name}?`)) {
+        firebase.collection(APT_COLLECTION).doc(apartment.id).delete();
+      }
     }
   }
 
-  function generateP() { 
-    var pass = ''; 
-    var str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +  
-            'abcdefghijklmnopqrstuvwxyz0123456789'; 
-      
-    for (var i = 1; i <= 8; i++) { 
-        var char = Math.floor(Math.random() 
-                    * str.length + 1); 
-          
-        pass += str.charAt(char) 
-    } 
-      
-    return pass; 
+
+  function generateP() {
+    var pass = '';
+    var str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
+      'abcdefghijklmnopqrstuvwxyz0123456789';
+
+    for (var i = 1; i <= 8; i++) {
+      var char = Math.floor(Math.random()
+        * str.length + 1);
+
+      pass += str.charAt(char)
+    }
+
+    return pass;
   }
 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
   const handleShow = () => {
     setnewPasswordApartments(generateP())
-    setShow(true)};
+    setShow(true)
+  };
 
-  const [showError, setShowError] = useState(false);
 
   return (
     <Container>
@@ -207,6 +212,18 @@ function Apartments() {
         </Modal>
       </Row>
       <Row>
+        <Col>
+
+          {
+            error ? <div className="alert alert-danger" role="alert">
+              {error}
+            </div>
+            : <div></div>
+          }
+        </Col>
+
+      </Row>
+      <Row>
         <Col md={{ span: 10, offset: 1 }} xs={12} sm={12}>
           <Button variant="primary" style={{ marginBottom: 10 }} className="float-right" onClick={handleShow}>
             Crear apartamento
@@ -231,7 +248,7 @@ function Apartments() {
                   <td>{apartment.buildingname}</td>
                   <td>{apartment.admin ? "Sí" : "No"}</td>
                   <td>
-                    <FontAwesomeIcon icon={faTrash} className="text-danger pointer" onClick={() => onDelete(apartment.id)} />
+                    <FontAwesomeIcon icon={faTrash} className="text-danger pointer" onClick={() => onDelete(apartment)} />
                   </td>
                 </tr>
               ))}

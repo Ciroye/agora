@@ -22,7 +22,7 @@ function Buildings() {
   const [residentials, setResidentials] = useState([]);
   const [newNameResidentials, setnewNameResidentials] = useState([]);
   const [newTotalResidentials, setnewTotalResidentials] = useState([]);
-
+  const [error, setError] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       firebase.collection(BUILDING_COLLECTION).onSnapshot(function (data) {
@@ -48,7 +48,7 @@ function Buildings() {
   async function onDelete(id) {
     const files = await firebase
       .collection("apartaments")
-      .where("residential", "==", id)
+      .where("residential", "==",id)
       .get();
 
     if (files.docs.length === 0) {

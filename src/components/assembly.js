@@ -25,6 +25,7 @@ function Assemblys() {
   const [newNameAssemblys, setnewNameAssemblys] = useState([]);
   const [newUrlAssemblys, setnewUrlAssemblys] = useState([]);
   const [newBuildingAssemblys, setnewBuildingAssemblys] = useState("");
+  const [error, setError] = useState("");
 
 
 
@@ -216,7 +217,7 @@ function Assemblys() {
                 <tr key={i}>
                   <td>{assembly.name}</td>
                   <td>{assembly.date}</td>
-                  <td>{assembly.url}</td>
+                  <td><a href={window.location.origin+"/meet?id="+assembly.url} target="blank"> Link meeting </a></td>
                   <td>{assembly.building}</td>
 
                   <td>
