@@ -218,7 +218,7 @@ function Assemblys() {
                   <td>{assembly.name}</td>
                   <td>{assembly.date}</td>
                   <td><a href={window.location.origin+"/meet?id="+assembly.url} target="blank"> Link meeting </a></td>
-                  <td>{assembly.building}</td>
+                  <td>{assembly.buildingname}</td>
 
                   <td>
                     <FontAwesomeIcon icon={faTrash} className="text-danger pointer" onClick={() => onDelete(assembly.id)} />

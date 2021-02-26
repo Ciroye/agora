@@ -8,6 +8,7 @@ import Chart from '../components/chart';
 import { ACTIVE_SESSIONS, ASSEMBLY_COLLECTION, QUESTION_COLLECTION } from '../constants/constants';
 import fb from '../firebase'
 import { getBuilding, setSession, updateSession } from '../utils/fb'
+import "../assets/styles/meet.css";
 
 
 const mapStateToProps = (state) => {
@@ -144,7 +145,18 @@ class Meet extends Component {
               <h6>Participantes: <strong>{activeUsers}/{this.props.building.total}</strong></h6>
               <h6>Quorum: <strong>{quorum}%</strong></h6>
             </Card.Body>
+            
           </Card>
+        
+          <Card className="shadow-sm mb-5 bg-white rounded" style={{ wdth: "15%", position: "absolute", top: 0, left: 0, zIndex: 100 }}>
+            <Card.Body>
+             <center>
+             <h5>Bienvenidos a la asamblea Unidad residencial <br/>
+             <strong>{this.props.building.name}</strong></h5>
+             </center>
+            </Card.Body>            
+          </Card>
+         
           <div className="container-fluid">
             <div className="row">
               <div className="col-8"> <Chart /></div>
