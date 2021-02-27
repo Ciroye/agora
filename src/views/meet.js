@@ -141,12 +141,9 @@ class Meet extends Component {
       <>
         {!logued && <Login onComplete={this.onLoginComplete} />}
         {logued && <>
-
-
-
           <div className="container-fluid">
             <div class="row justify-content-md-center shadow-sm bg-white rounded" style={{padding:20, marginBottom:"0 !important"}}>
-              <div class="col"> <img src={logo} style={{ width: "60px" }} /> </div>
+              <div class="col"> <img src={logo} style={{ width: "60px" }} alt="Agora"/> </div>
               <div class="col-md-auto">
                 <center>
                   <h5>Bienvenidos a la asamblea <strong> {this.props.assembly.name}</strong>  <br />

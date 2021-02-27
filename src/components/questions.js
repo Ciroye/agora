@@ -3,7 +3,7 @@ import { Navbar, Button, Card } from "react-bootstrap";
 import { connect } from 'react-redux';
 import { setQuestion } from '../actions';
 import fb from "../firebase";
-import { ANSWERS_COLLECTION } from '../constants/constants';
+import { ANSWERS_COLLECTION, QUESTION_COLLECTION } from '../constants/constants';
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -74,6 +74,13 @@ class Question extends Component {
         this.props.setQuestion(this.props.data.id)
     }
 
+    delete = (question) => {
+        console.log(question);
+        if (window.confirm("Está seguro que quiere borrar la pregunta " + question.title + "? Puede que ya tenga votos.")) {
+            fb.collection(QUESTION_COLLECTION).doc(question.id).delete();
+        }
+    }
+
     vote = (decision) => {
         fb.collection(ANSWERS_COLLECTION).add({
             apartment: this.props.apartment.id,
@@ -87,7 +94,7 @@ class Question extends Component {
     render() {
         const { hasVote } = this.state;
         return <Card className="shadow-sm mb-2 rounded" key={this.props.key}>
-            {this.props.apartment.admin && <Card.Title style={{ marginBottom: 0 }}><i className="fas fa-times float-right p-2"></i></Card.Title>}
+            {this.props.apartment.admin && <Card.Title onClick={() => { this.delete(this.props.data) }} style={{ marginBottom: 0 }}><i className="fas fa-times float-right p-2"></i></Card.Title>}
             <Card.Body style={{ padding: (this.props.apartment.admin ? "0px" : "1.25rem") + " 1.25rem 1.25rem 1.25rem" }}>
                 <p>{this.props.data.title}</p>
                 <div className="text-center">
