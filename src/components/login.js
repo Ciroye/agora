@@ -42,7 +42,8 @@ class Login extends Component {
     componentDidMount() {
     }
 
-    login() {
+    login=(event)=> {
+        event.preventDefault()
         this.setState({ loading: true, error: "" })
         fb.collection(APT_COLLECTION).where("name", "==", this.state.name).where("password", "==", this.state.password).get()
             .then((res) => {
@@ -67,7 +68,9 @@ class Login extends Component {
                     }
                 }
             })
-    }
+           
+    } 
+    
 
     render() {
         const { error, loading } = this.state;
@@ -77,8 +80,8 @@ class Login extends Component {
                     <br />
                     <br />
                     <br />
-                    <div className="row align-items-center">
-                        <form autoComplete="false" className="col-4 offset-4">
+                    <div className="row align-items-center" >
+                        <form autoComplete="false" className="col-4 offset-4" onSubmit={this.login} >
                             <div className="text-center">
                                 <img className="mb-4 text-center " src={icon3} alt="" width="80" height="80" />
                                 <h1 className="h6 mb-3 fw-normal"> Iniciar sesión para ingresar a la asamblea</h1>
@@ -92,7 +95,7 @@ class Login extends Component {
                             <label className="visually-hidden"> Contraseña </label>
                             <input autoComplete="false" onChange={this.handleInputChange} type="password" name="password" className="form-control" placeholder="Contraseña" required />
                             <br />
-                            {!loading && <button className="w-100 btn btn-lg btn-primary" type="button" onClick={this.login.bind(this)}>Iniciar sesión</button>}
+                            {!loading && <button className="w-100 btn btn-lg btn-primary" type="submit" >Iniciar sesión</button>}
                             {loading && <div className="text-center">
                                 <div className="spinner-border" role="status">
                                     <span className="sr-only">Loading...</span>

@@ -9,6 +9,7 @@ import { ACTIVE_SESSIONS, ASSEMBLY_COLLECTION, QUESTION_COLLECTION } from '../co
 import fb from '../firebase'
 import { getBuilding, setSession, updateSession } from '../utils/fb'
 import "../assets/styles/meet.css";
+import logo from '../assets/IMG/icon3.png';
 
 
 const mapStateToProps = (state) => {
@@ -140,28 +141,28 @@ class Meet extends Component {
       <>
         {!logued && <Login onComplete={this.onLoginComplete} />}
         {logued && <>
-          <Card className="shadow-sm mb-5 bg-white rounded" style={{ wdth: "15%", position: "absolute", top: 0, left: 0, zIndex: 100 }}>
-            <Card.Body>
-              <h6>Participantes: <strong>{activeUsers}/{this.props.building.total}</strong></h6>
-              <h6>Quorum: <strong>{quorum}%</strong></h6>
-            </Card.Body>
-            
-          </Card>
-        
-          <Card className="shadow-sm mb-5 bg-white rounded" style={{ wdth: "15%", position: "absolute", top: 0, left: 0, zIndex: 100 }}>
-            <Card.Body>
-             <center>
-             <h5>Bienvenidos a la asamblea Unidad residencial <br/>
-             <strong>{this.props.building.name}</strong></h5>
-             </center>
-            </Card.Body>            
-          </Card>
-         
+
+
+
           <div className="container-fluid">
+            <div class="row justify-content-md-center shadow-sm bg-white rounded" style={{padding:20, marginBottom:"0 !important"}}>
+              <div class="col"> <img src={logo} style={{ width: "60px" }} /> </div>
+              <div class="col-md-auto">
+                <center>
+                  <h5>Bienvenidos a la asamblea <strong> {this.props.assembly.name}</strong>  <br />
+                    Unidad residencial <strong>{this.props.building.name}</strong></h5>
+                </center>
+              </div>
+              <div class="col text-right">
+                <h6>Participantes: <strong>{activeUsers}/{this.props.building.total}</strong></h6>
+                <h6>Quorum: <strong>{quorum}%</strong></h6>
+              </div>
+            </div>
             <div className="row">
+
               <div className="col-8"> <Chart /></div>
               <div className="col-4">
-                <div style={{ maxHeight: "100vh", height: "100vh", overflow: "hidden", overflowY: "scroll", padding: "10px" }} className="shadow-sm rounded">
+                <div style={{ maxHeight: "85vh", height: "85vh", overflow: "hidden", overflowY: "scroll", padding: "10px" }} className="shadow-sm rounded">
                   {this.props.apartment.admin && <Card className="shadow-sm mb-2 rounded">
                     <Card.Body >
                       <div className="text-center">

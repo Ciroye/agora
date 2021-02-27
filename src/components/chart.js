@@ -136,7 +136,8 @@ class Chart extends React.Component {
     }
 
     render() {
-        return <div style={{ height: "80vh", marginTop: "100px" }}>
+        return <div style={{ height: "80vh", marginTop: "20px" }}>
+            
             {this.state.visible && <ReactApexChart options={this.state.options} series={this.state.series} type="donut" width="100%" height="100%" />}
         </div>
     }
