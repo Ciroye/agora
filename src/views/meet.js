@@ -146,13 +146,13 @@ class Meet extends Component {
               <div class="col"> <img src={logo} style={{ width: "60px" }} alt="Agora"/> </div>
               <div class="col-md-auto">
                 <center>
-                  <h5>Bienvenidos a la asamblea <strong> {this.props.assembly.name}</strong>  <br />
-                    Unidad residencial <strong>{this.props.building.name}</strong></h5>
+                  <h5>Bienvenidos a la asamblea  {this.props.assembly.name}<br />
+                    Unidad residencial {this.props.building.name}</h5>
                 </center>
               </div>
               <div class="col text-right">
                 <h6>Participantes: <strong>{activeUsers}/{this.props.building.total}</strong></h6>
-                <h6>Quorum: <strong>{quorum}%</strong></h6>
+                <h6>Quorum: <strong>{quorum.toFixed(3)}%</strong></h6>
               </div>
             </div>
             <div className="row">
