@@ -144,7 +144,7 @@ class Meet extends Component {
           <div className="container-fluid">
             <div class="row justify-content-md-center shadow-sm bg-white rounded" style={{padding:20, marginBottom:"0 !important"}}>
               <div class="col"> <img src={logo} style={{ width: "60px" }} alt="Agora"/> </div>
-              <a  class="btn btn-primary mr-4 d-flex"  href="https://meet.google.com/hyw-asuo-uwf?authuser=1" target="blank" role="button">Videoconferencia</a>
+              <a  class="btn btn-primary mr-4 d-flex"  href="https://meet.google.com/hyw-asuo-uwf?authuser=1" target="_blank" role="button">Videoconferencia</a>
               <div class="col-md-auto">
                 <center>
                   <h5>Bienvenidos a la asamblea  {this.props.assembly.name}<br />
